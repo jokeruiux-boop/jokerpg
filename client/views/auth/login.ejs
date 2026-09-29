@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <%- include('../partials/head') %>
+
+  <!-- Biblioteca SweetAlert2 para Alertas e Notificações Táticas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* ==========================================================================
+       JOKER RPG — DESIGN SYSTEM NATIVO (MODO ESCURO & MODO CLARO)
+       Estética RPG MMO de Alta Fidelidade com Ornamentos Metálicos
+       ========================================================================== */
+
+    :root[data-theme="dark"] {
+      --rpg-bg: #070709;
+      --rpg-bg-overlay: radial-gradient(circle at 50% 35%, rgba(55, 23, 35, 0.45) 0%, rgba(10, 8, 12, 0.85) 60%, #050507 100%);
+      --rpg-panel-border: rgba(184, 134, 74, 0.35);
+      --rpg-input-bg: rgba(18, 15, 20, 0.85);
+      --rpg-input-border: #3b2838;
+      --rpg-input-focus: #b8864a;
+      --rpg-text: #e2d9cf;
+      --rpg-text-muted: #9e8d80;
+      --rpg-gold: #c89b3c;
+      --rpg-gold-light: #f0e6d2;
+      --rpg-gold-glow: rgba(200, 155, 60, 0.4);
+      --rpg-ruby: #781c2f;
+      --rpg-ruby-glow: rgba(220, 38, 38, 0.4);
+      --rpg-btn-grad: linear-gradient(180deg, #6c2a47 0%, #3a1523 50%, #240a15 100%);
+      --rpg-btn-border: #9b4d6e;
+      --rpg-dock-bg: rgba(8, 7, 10, 0.92);
+      --rpg-dock-border: rgba(184, 134, 74, 0.25);
+    }
+
+    :root[data-theme="light"] {
+      --rpg-bg: #e6dfd5;
+      --rpg-bg-overlay: radial-gradient(circle at 50% 35%, rgba(240, 230, 218, 0.75) 0%, rgba(215, 200, 185, 0.9) 65%, #c8bcae 100%);
+      --rpg-panel-border: rgba(138, 98, 48, 0.45);
+      --rpg-input-bg: rgba(255, 255, 255, 0.9);
+      --rpg-input-border: #b89c82;
+      --rpg-input-focus: #8a6230;
+      --rpg-text: #231c16;
+      --rpg-text-muted: #5e4f42;
+      --rpg-gold: #9e6f21;
+      --rpg-gold-light: #422d0c;
+      --rpg-gold-glow: rgba(158, 111, 33, 0.35);
+      --rpg-ruby: #8a1f33;
+      --rpg-ruby-glow: rgba(138, 31, 51, 0.35);
+      --rpg-btn-grad: linear-gradient(180deg, #9b4d6e 0%, #782643 50%, #54172c 100%);
+      --rpg-btn-border: #c97b9c;
+      --rpg-dock-bg: rgba(240, 234, 226, 0.95);
+      --rpg-dock-border: rgba(138, 98, 48, 0.35);
+    }
+
+    body {
+      background-color: var(--rpg-bg);
+      color: var(--rpg-text);
+      font-family: 'Rajdhani', var(--font-main), sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+      user-select: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Cenário de Fundo Atmosférico */
+    .rpg-viewport-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: var(--rpg-bg-overlay), url('/images/backgrounds/arena-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Barra Superior com Comutador de Tema */
+    .rpg-top-bar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 16px 28px;
+    }
+
+    .theme-switch-btn {
+      background: var(--rpg-input-bg);
+      border: 1px solid var(--rpg-panel-border);
+      color: var(--rpg-gold);
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .theme-switch-btn:hover {
+      border-color: var(--rpg-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 0 14px var(--rpg-gold-glow);
+    }
+
+    /* Palco Centralizado do Login */
+    .rpg-auth-stage {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ==========================================================================
+       EMBLEMA MESTRE — LOGO ESTAMPADO DIRETAMENTE NA TELA
+       ========================================================================== */
+    .rpg-emblem-container {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* LOGO REAL ESTAMPADO - SEM ESFERA, SEM CONTAINER, DIRETO NA TELA */
+    .rpg-logo-img {
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 20px var(--rpg-gold-glow)) drop-shadow(0 0 40px rgba(200, 155, 60, 0.2));
+      transition: transform 0.4s ease, filter 0.4s ease;
+      margin-bottom: 10px;
+    }
+
+    .rpg-logo-img:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 30px var(--rpg-gold-glow)) drop-shadow(0 0 60px rgba(200, 155, 60, 0.4));
+    }
+
+    .rpg-logo-wings {
+      position: relative;
+      display: inline-block;
+      padding: 0 24px;
+    }
+
+    .rpg-logo-title {
+      font-family: 'Chakra Petch', 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 2.3rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin: 0;
+      color: var(--rpg-gold-light);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 16px var(--rpg-gold-glow);
+      line-height: 1;
+    }
+
+    .rpg-logo-sub {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: var(--rpg-gold);
+      display: block;
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+
+    .rpg-logo-banner-frame {
+      height: 2px;
+      width: 100%;
+      background: linear-gradient(90deg, transparent 0%, var(--rpg-gold) 50%, transparent 100%);
+      margin-top: 6px;
+    }
+
+    /* Formulário e Caixas de Entrada */
+    .rpg-login-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .rpg-field-box {
+      width: 100%;
+      position: relative;
+    }
+
+    .rpg-input {
+      width: 100%;
+      height: 48px;
+      background: var(--rpg-input-bg);
+      border: 1px solid var(--rpg-input-border);
+      border-radius: 2px;
+      color: var(--rpg-text);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-align: center;
+      text-transform: uppercase;
+      padding: 0 16px;
+      outline: none;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .rpg-input::placeholder {
+      color: var(--rpg-text-muted);
+      letter-spacing: 3px;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    .rpg-input:focus {
+      border-color: var(--rpg-input-focus);
+      box-shadow: 0 0 14px var(--rpg-gold-glow), inset 0 2px 6px rgba(0, 0, 0, 0.4);
+      color: var(--rpg-gold-light);
+    }
+
+    /* Caixa 'Remember My Account Info' */
+    .rpg-remember-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 4px 0 10px 0;
+      cursor: pointer;
+    }
+
+    .rpg-checkbox {
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      background: var(--rpg-input-bg);
+      border: 1px solid var(--rpg-gold);
+      border-radius: 2px;
+      display: grid;
+      place-content: center;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .rpg-checkbox:checked {
+      background: var(--rpg-gold);
+    }
+
+    .rpg-checkbox:checked::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background-color: #100b08;
+    }
+
+    .rpg-remember-label {
+      font-size: 0.82rem;
+      color: var(--rpg-text-muted);
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    /* Botão de Login Estilo Banner Ornamental */
+    .rpg-btn-banner-container {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .rpg-bracket-left,
+    .rpg-bracket-right {
+      position: absolute;
+      color: var(--rpg-gold);
+      font-size: 1.4rem;
+      font-weight: 300;
+      line-height: 1;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      transition: all 0.2s ease;
+      text-shadow: 0 0 8px var(--rpg-gold-glow);
+    }
+
+    .rpg-bracket-left { left: 14px; }
+    .rpg-bracket-right { right: 14px; }
+
+    .rpg-btn-submit {
+      width: 100%;
+      height: 50px;
+      background: var(--rpg-btn-grad);
+      border: 1px solid var(--rpg-btn-border);
+      border-radius: 3px;
+      color: #ffffff;
+      font-family: 'Chakra Petch', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rpg-btn-submit:hover {
+      box-shadow: 0 0 20px var(--rpg-ruby-glow), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      border-color: #e07a9e;
+      transform: scale(1.02);
+    }
+
+    .rpg-btn-banner-container:hover .rpg-bracket-left {
+      left: 8px;
+      color: #fff;
+    }
+
+    .rpg-btn-banner-container:hover .rpg-bracket-right {
+      right: 8px;
+      color: #fff;
+    }
+
+    /* Botão Opcional de Acesso Google OAuth Integrado */
+    .rpg-google-btn {
+      width: 100%;
+      height: 42px;
+      background: rgba(18, 15, 20, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
+      color: var(--rpg-text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .rpg-google-btn:hover {
+      background: var(--rpg-input-bg);
+      border-color: var(--rpg-panel-border);
+      color: var(--rpg-text);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Rodapé Inferior Ornamental com Filigranas */
+    .rpg-dock-footer {
+      position: relative;
+      z-index: 20;
+      width: 100%;
+      background: var(--rpg-dock-bg);
+      border-top: 1px solid var(--rpg-dock-border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .rpg-lattice-ornament {
+      color: var(--rpg-gold);
+      opacity: 0.65;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+    }
+
+    .rpg-dock-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin: 0 auto;
+    }
+
+    .rpg-dock-link {
+      color: var(--rpg-text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: color 0.15s ease;
+      cursor: pointer;
+    }
+
+    .rpg-dock-link:hover {
+      color: var(--rpg-gold-light);
+    }
+
+    .rpg-dock-link.highlight {
+      color: #84cc16; /* Destaque verde maçã */
+      font-weight: 700;
+    }
+
+    .rpg-dock-link.highlight:hover {
+      color: #a3e635;
+      text-shadow: 0 0 8px rgba(132, 204, 22, 0.4);
+    }
+
+    /* Customização do SweetAlert2 */
+    .swal2-popup.rpg-swal {
+      background: #0f121a !important;
+      border: 1px solid var(--rpg-gold) !important;
+      border-radius: 4px !important;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.9) !important;
+      color: #e2d9cf !important;
+      font-family: 'Rajdhani', sans-serif !important;
+    }
+
+    .swal2-title.rpg-swal-title {
+      font-family: 'Chakra Petch', serif !important;
+      color: var(--rpg-gold-light) !important;
+      letter-spacing: 2px !important;
+      text-transform: uppercase !important;
+    }
+
+    .swal2-confirm.rpg-swal-confirm {
+      background: var(--rpg-btn-grad) !important;
+      border: 1px solid var(--rpg-btn-border) !important;
+      border-radius: 2px !important;
+      font-weight: 700 !important;
+      letter-spacing: 2px !important;
+      text-transform: uppercase !important;
+      box-shadow: 0 0 12px var(--rpg-ruby-glow) !important;
+    }
+
+    @media (max-width: 576px) {
+      .rpg-logo-img { width: 100px; height: 100px; }
+      .rpg-logo-title { font-size: 1.8rem; }
+      .rpg-dock-links { gap: 12px; }
+      .rpg-dock-footer { padding: 12px 14px; }
+      .rpg-lattice-ornament { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fundo Atmosférico de Alta Resolução -->
+  <div class="rpg-viewport-bg"></div>
+
+  <!-- Barra Superior com Alternador de Tema -->
+  <header class="rpg-top-bar">
+    <button type="button" class="theme-switch-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Alternar Modo Claro e Escuro">
+      <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+      <span id="themeLabel">TEMA ESCURO</span>
+    </button>
+  </header>
+
+  <!-- Palco Central de Entrada -->
+  <main class="rpg-auth-stage">
+    <!-- LOGO ESTAMPADO DIRETAMENTE NA TELA (SEM ESFERA / SEM CONTAINER) -->
+    <div class="rpg-emblem-container">
+      <img src="/images/logo.png" alt="JOKER RPG" class="rpg-logo-img">
+      <div class="rpg-logo-wings">
+        <h1 class="rpg-logo-title">JOKER RPG</h1>
+        <span class="rpg-logo-sub">TACTICAL CARDS & ARENA</span>
+        <div class="rpg-logo-banner-frame"></div>
+      </div>
+    </div>
+
+    <!-- Formulário Autoritativo de Login -->
+    <form action="/auth/login" method="POST" class="rpg-login-form" id="rpgLoginForm">
+      <!-- Campo de Usuário / E-mail -->
+      <div class="rpg-field-box">
+        <input 
+          type="email" 
+          class="rpg-input" 
+          id="email" 
+          name="email" 
+          placeholder="USERNAME" 
+          value="<%= typeof formData !== 'undefined' && formData.email ? formData.email : '' %>" 
+          required 
+          autocomplete="email"
+          spellcheck="false"
+        >
+      </div>
+
+      <!-- Campo de Senha -->
+      <div class="rpg-field-box">
+        <input 
+          type="password" 
+          class="rpg-input" 
+          id="password" 
+          name="password" 
+          placeholder="PASSWORD" 
+          required 
+          autocomplete="current-password"
+        >
+      </div>
+
+      <!-- Checkbox 'Remember my account info' -->
+      <div class="rpg-remember-wrapper" onclick="toggleRememberCheckbox()">
+        <input type="checkbox" class="rpg-checkbox" id="rememberMe" name="rememberMe" checked>
+        <label for="rememberMe" class="rpg-remember-label">Remember my account info</label>
+      </div>
+
+      <!-- Botão Ornamental LOGIN -->
+      <div class="rpg-btn-banner-container">
+        <span class="rpg-bracket-left">&lang;</span>
+        <button type="submit" class="rpg-btn-submit" id="loginSubmitBtn">
+          LOGIN
+        </button>
+        <span class="rpg-bracket-right">&rang;</span>
+      </div>
+
+      <!-- Acesso Rápido Alternativo via Google OAuth 2.0 -->
+      <a href="/auth/google" class="rpg-google-btn">
+        <svg width="15" height="15" viewBox="0 0 18 18">
+          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+          <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.173 0 7.548 0 9s.347 2.827.957 4.039l3.007-2.332z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
+        </svg>
+        Entrar com Google
+      </a>
+    </form>
+  </main>
+
+  <!-- Rodapé Ornamental Idêntico à Barra Inferior da Imagem -->
+  <footer class="rpg-dock-footer">
+    <div class="rpg-lattice-ornament">
+      &#10070;&#10070;&#10070;
+    </div>
+
+    <div class="rpg-dock-links">
+      <a href="/auth/forgot-password" class="rpg-dock-link">
+        Forgot your Password ?
+      </a>
+      <span class="text-secondary opacity-50">&bull;</span>
+      <a href="javascript:void(0)" class="rpg-dock-link" onclick="openHelpModal()">
+        Need Help ?
+      </a>
+      <span class="text-secondary opacity-50">&bull;</span>
+      <a href="/auth/register" class="rpg-dock-link highlight">
+        Create Account
+      </a>
+    </div>
+
+    <div class="rpg-lattice-ornament">
+      &#10070;&#10070;&#10070;
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT: SWEETALERT2, ÁUDIO E MOTOR DE TEMA CLARO/ESCURO
+       ========================================================================== -->
+  <script>
+    // 1. Motor de Alternância de Tema Claro / Escuro com Persistência
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem('joker_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeButtonUI(savedTheme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const target = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', target);
+      localStorage.setItem('joker_theme', target);
+      updateThemeButtonUI(target);
+
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+    }
+
+    function updateThemeButtonUI(theme) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (theme === 'light') {
+        icon.className = 'bi bi-sun-fill text-warning';
+        label.textContent = 'TEMA CLARO';
+      } else {
+        icon.className = 'bi bi-moon-stars-fill';
+        label.textContent = 'TEMA ESCURO';
+      }
+    }
+
+    applySavedTheme();
+
+    // 2. Acionador do Checkbox de Lembrança
+    function toggleRememberCheckbox() {
+      const box = document.getElementById('rememberMe');
+      box.checked = !box.checked;
+    }
+
+    // 3. Suporte a Sons Táticos e Envio
+    document.getElementById('rpgLoginForm').addEventListener('submit', () => {
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playCardSelect();
+      }
+    });
+
+    // 4. Modal 'Need Help?' Renderizado via SweetAlert2
+    function openHelpModal() {
+      Swal.fire({
+        title: 'Central de Suporte da Arena',
+        html: `
+          <div style="text-align: left; font-size: 0.95rem; line-height: 1.6;">
+            <p><strong>Recuperação de Acesso:</strong> Se perdeu sua senha, utilize a opção <em>Forgot your Password</em> para gerar um token seguro de restauração.</p>
+            <p><strong>Login Social:</strong> Se cadastrou através do Google, utilize o botão <em>Entrar com Google</em> para validar sua credencial.</p>
+            <p><strong>Servidor e Status:</strong> O backend autoritativo do Joker RPG opera conectado ao Neon PostgreSQL em tempo real.</p>
+          </div>
+        `,
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+        customClass: {
+          popup: 'rpg-swal',
+          title: 'rpg-swal-title',
+          confirmButton: 'rpg-swal-confirm'
+        }
+      });
+    }
+
+    // 5. Integração de Alertas e Erros com SweetAlert2
+    document.addEventListener('DOMContentLoaded', () => {
+      <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+        Swal.fire({
+          title: 'Sucesso Tático',
+          text: "<%= successMessage %>",
+          icon: 'success',
+          confirmButtonText: 'Prosseguir',
+          customClass: {
+            popup: 'rpg-swal',
+            title: 'rpg-swal-title',
+            confirmButton: 'rpg-swal-confirm'
+          }
+        });
+      <% } %>
+
+      <% if (typeof errors !== 'undefined' && Array.isArray(errors) && errors.length > 0) { %>
+        Swal.fire({
+          title: 'Falha de Autenticação',
+          html: `<ul style="text-align: left; margin: 0; padding-left: 20px;">
+            <% errors.forEach(function(err) { %>
+              <li><%= err %></li>
+            <% }); %>
+          </ul>`,
+          icon: 'error',
+          confirmButtonText: 'Corrigir Dados',
+          customClass: {
+            popup: 'rpg-swal',
+            title: 'rpg-swal-title',
+            confirmButton: 'rpg-swal-confirm'
+          }
+        });
+      <% } %>
+    });
+  </script>
+</body>
+</html>

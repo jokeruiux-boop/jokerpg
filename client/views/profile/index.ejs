@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <%- include('../partials/head') %>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Outfit & Cinzel (Tipografia Gótica / Dark Fantasy) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Google Material Symbols Oficial (Sem Emojis) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Biblioteca SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* ==========================================================================
+       JOKER RPG — FOLHA DE PERFIL DARK FANTASY (DESIGN CHAPADO DIABLO / MMO)
+       Molduras em Ferro Forjado, Ouro Incandescente e Grimório de Regras
+       ========================================================================== */
+
+    :root[data-theme="dark"] {
+      --gothic-bg: #090404;
+      --gothic-frame-bg: #140707;
+      --gothic-panel: #0d0404;
+      --gothic-panel-card: linear-gradient(180deg, #180808 0%, #0d0303 100%);
+      --gothic-border-outer: #381010;
+      --gothic-border-gold: #b38b4d;
+      --gothic-border-gold-glow: rgba(179, 139, 77, 0.45);
+      --gothic-filigree: #8a6530;
+      --gothic-text: #eae0d5;
+      --gothic-text-gold: #d4af37;
+      --gothic-text-muted: #8e7a6d;
+      --gothic-red-glow: rgba(220, 38, 38, 0.7);
+      --gothic-slot-bg: #190505;
+      --gothic-slot-border: #4a1515;
+      --gothic-hotbar-bg: #100505;
+    }
+
+    :root[data-theme="light"] {
+      --gothic-bg: #ece6dc;
+      --gothic-frame-bg: #dcd3c3;
+      --gothic-panel: #f4eee2;
+      --gothic-panel-card: linear-gradient(180deg, #ffffff 0%, #f1e9dc 100%);
+      --gothic-border-outer: #8a6e55;
+      --gothic-border-gold: #966f2d;
+      --gothic-border-gold-glow: rgba(150, 111, 45, 0.3);
+      --gothic-filigree: #78531e;
+      --gothic-text: #261c14;
+      --gothic-text-gold: #825a17;
+      --gothic-text-muted: #6e5a4c;
+      --gothic-red-glow: rgba(185, 28, 28, 0.4);
+      --gothic-slot-bg: #e2d7c5;
+      --gothic-slot-border: #9c846e;
+      --gothic-hotbar-bg: #cfc2ad;
+    }
+
+    body {
+      background: var(--gothic-bg) !important;
+      color: var(--gothic-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      user-select: none;
+    }
+
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .gothic-profile-wrapper {
+      max-width: 1200px;
+      margin: 20px auto 50px auto;
+      padding: 0 16px;
+    }
+
+    /* Moldura Principal de Ferro e Pedra */
+    .gothic-main-frame {
+      background: var(--gothic-frame-bg);
+      border: 4px solid var(--gothic-border-outer);
+      border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(0, 0, 0, 0.8);
+      position: relative;
+      padding: 8px;
+    }
+
+    /* Cantoneiras Metálicas Ornamentais */
+    .gothic-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid var(--gothic-border-gold);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .gothic-corner.top-left { top: 2px; left: 2px; border-right: none; border-bottom: none; }
+    .gothic-corner.top-right { top: 2px; right: 2px; border-left: none; border-bottom: none; }
+    .gothic-corner.bottom-left { bottom: 2px; left: 2px; border-right: none; border-top: none; }
+    .gothic-corner.bottom-right { bottom: 2px; right: 2px; border-left: none; border-top: none; }
+
+    /* Barra Superior de Abas */
+    .gothic-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #2d0b0b;
+      background: #090202;
+      padding: 6px 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .gothic-tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .gothic-tab-link {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #634f47;
+      text-decoration: none;
+      padding: 6px 12px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .gothic-tab-link:hover {
+      color: #b58d60;
+    }
+
+    .gothic-tab-link.active {
+      color: #ffffff;
+      text-shadow: 0 0 10px var(--gothic-red-glow), 0 0 20px rgba(255, 30, 0, 0.8);
+    }
+
+    .gothic-tab-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #ff3b30 50%, transparent 100%);
+      box-shadow: 0 0 8px #ff3b30;
+    }
+
+    .codex-tab-highlight {
+      color: #d4af37 !important;
+      border: 1px solid rgba(179, 139, 77, 0.35);
+      border-radius: 2px;
+      background: rgba(179, 139, 77, 0.08);
+    }
+
+    .codex-tab-highlight:hover {
+      background: rgba(179, 139, 77, 0.2);
+      border-color: var(--gothic-border-gold);
+      color: #ffdd44 !important;
+    }
+
+    .gothic-theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--gothic-filigree);
+      color: var(--gothic-text-gold);
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-theme-toggle-btn:hover {
+      box-shadow: 0 0 8px var(--gothic-border-gold-glow);
+    }
+
+    /* Cabeçalho de Status: Nível, Brasão Central e Ranking */
+    .gothic-status-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 2px solid #2d0b0b;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .gothic-level-block {
+      text-align: left;
+    }
+
+    .gothic-level-number {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--gothic-text);
+      line-height: 1;
+      margin: 0;
+    }
+
+    .gothic-class-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--gothic-text-gold);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .gothic-emblem-medallion {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2e0909 0%, #0d0202 100%);
+      border: 2px solid #5a1818;
+      box-shadow: inset 0 0 10px #000, 0 0 15px rgba(220, 38, 38, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gothic-meta-box {
+      text-align: right;
+      font-family: 'Cinzel', serif;
+    }
+
+    .gothic-meta-rating {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gothic-text-gold);
+      line-height: 1;
+    }
+
+    .gothic-meta-label {
+      font-size: 0.68rem;
+      color: var(--gothic-text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Corpo Principal Duplo */
+    .gothic-body-split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .gothic-panel-box {
+      background: var(--gothic-panel);
+      border: 2px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.85);
+      padding: 18px 20px;
+      position: relative;
+    }
+
+    .gothic-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .gothic-stat-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gothic-text);
+      text-transform: uppercase;
+    }
+
+    .gothic-stat-value {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--gothic-text-gold);
+    }
+
+    /* Divisores Ornamentais */
+    .gothic-divider-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 2px 0;
+    }
+    .gothic-divider-line::before,
+    .gothic-divider-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gothic-filigree) 50%, transparent 100%);
+    }
+    .gothic-divider-line .filigree-glyph {
+      color: var(--gothic-border-gold);
+      font-size: 0.65rem;
+      padding: 0 6px;
+    }
+
+    /* Quatro Números Dourados com Ícones */
+    .gothic-core-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      text-align: center;
+      padding: 14px 0 10px 0;
+      border-top: 1px solid rgba(179, 139, 77, 0.25);
+      border-bottom: 1px solid rgba(179, 139, 77, 0.25);
+      margin-top: 8px;
+    }
+
+    .gothic-gold-number {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #ffcc00;
+      text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .gothic-stat-circle-icon {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: #190505;
+      border: 1px solid var(--gothic-border-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gothic-text-gold);
+    }
+
+    .gothic-stat-circle-icon span {
+      font-size: 16px;
+    }
+
+    /* Painel do Avatar com Moldura de Ouro */
+    .gothic-avatar-frame {
+      background: #000;
+      border: 2px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.95);
+      height: 380px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gothic-avatar-art {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: transform 0.4s ease;
+    }
+
+    .gothic-avatar-frame:hover .gothic-avatar-art {
+      transform: scale(1.03);
+    }
+
+    .gothic-avatar-upload-trigger {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gothic-frame-bg);
+      border: 1.5px solid var(--gothic-border-gold);
+      color: var(--gothic-text-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+      transition: all 0.2s ease;
+      z-index: 5;
+    }
+
+    .gothic-avatar-upload-trigger:hover {
+      transform: scale(1.15);
+      border-color: #ffaa00;
+      color: #ffdd44;
+      box-shadow: 0 0 14px var(--gothic-border-gold-glow);
+    }
+
+    /* Abas de Gerenciamento */
+    .gothic-management-container {
+      padding: 0 14px 14px 14px;
+    }
+
+    .gothic-tab-panel {
+      display: none;
+    }
+
+    .gothic-tab-panel.active {
+      display: block;
+    }
+
+    .gothic-input, .gothic-select {
+      background: var(--gothic-slot-bg);
+      border: 1px solid var(--gothic-slot-border);
+      color: var(--gothic-text);
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      padding: 8px 12px;
+      border-radius: 2px;
+      outline: none;
+      width: 100%;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-input:focus, .gothic-select:focus {
+      border-color: var(--gothic-border-gold);
+      box-shadow: 0 0 8px var(--gothic-border-gold-glow);
+    }
+
+    .gothic-btn-submit {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 10px 22px;
+      border-radius: 2px;
+      border: 1px solid var(--gothic-border-gold);
+      background: linear-gradient(180deg, #3d1414 0%, #170505 100%);
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gothic-btn-submit:hover {
+      background: linear-gradient(180deg, #6c1c1c 0%, #2e0909 100%);
+      border-color: #ffaa00;
+      color: #ffdd44;
+      transform: scale(1.02);
+    }
+
+    /* Grid de Heróis Desbloqueados */
+    .gothic-roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .gothic-roster-card {
+      background: var(--gothic-panel-card);
+      border: 1.5px solid var(--gothic-border-gold);
+      border-radius: 2px;
+      padding: 10px;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-roster-card:hover {
+      border-color: #ffaa00;
+      transform: translateY(-2px);
+    }
+
+    .roster-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--gothic-border-gold);
+      margin: 0 auto 6px auto;
+    }
+
+    /* ==========================================================================
+       MODAL DO GRIMÓRIO DE REGRAS TÁTICAS (CODEX DE COMBATE PAGINADO)
+       ========================================================================== */
+    .codex-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(9, 2, 2, 0.94);
+      backdrop-filter: blur(8px);
+      z-index: 2500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .codex-tome-card {
+      background: var(--gothic-frame-bg);
+      border: 3px solid var(--gothic-border-gold);
+      border-radius: 4px;
+      max-width: 820px;
+      width: 100%;
+      padding: 24px 28px;
+      box-shadow: 0 0 45px rgba(220, 38, 38, 0.4), inset 0 0 25px rgba(0, 0, 0, 0.9);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .codex-chapter-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(179, 139, 77, 0.25);
+    }
+
+    .codex-chapter-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+      background: #190505;
+      border: 1px solid var(--gothic-slot-border);
+      color: var(--gothic-text-muted);
+      border-radius: 2px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .codex-chapter-btn:hover {
+      color: var(--gothic-text-gold);
+      border-color: var(--gothic-border-gold);
+    }
+
+    .codex-chapter-btn.active {
+      background: linear-gradient(180deg, #3d1414 0%, #170505 100%);
+      border-color: var(--gothic-border-gold);
+      color: #ffcc00;
+      box-shadow: 0 0 10px rgba(179, 139, 77, 0.4);
+    }
+
+    .codex-content-body {
+      flex: 1;
+      padding: 10px 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--gothic-text);
+    }
+
+    .codex-content-body h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--gothic-text-gold);
+      font-size: 1.3rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(179, 139, 77, 0.2);
+      padding-bottom: 6px;
+    }
+
+    .codex-rule-box {
+      background: rgba(18, 5, 5, 0.85);
+      border-left: 3px solid var(--gothic-border-gold);
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      border-radius: 2px;
+    }
+
+    .codex-footer-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(179, 139, 77, 0.25);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    /* Barra Inferior com Orbe da Facção */
+    .gothic-bottom-hotbar {
+      background: var(--gothic-hotbar-bg);
+      border-top: 2px solid #3d0c0c;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin-top: 14px;
+    }
+
+    .gothic-orb-assembly {
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 25;
+    }
+
+    .gothic-orb-sphere {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px var(--orb-glow), inset 0 -6px 14px rgba(0, 0, 0, 0.8);
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .gothic-orb-sphere:hover {
+      transform: scale(1.08);
+    }
+
+    .gothic-orb-sphere.FIRE {
+      background: radial-gradient(circle at 35% 30%, #ff7700 0%, #cc1100 50%, #440000 100%);
+      --orb-glow: rgba(255, 60, 0, 0.85);
+    }
+    .gothic-orb-sphere.WATER {
+      background: radial-gradient(circle at 35% 30%, #38bdf8 0%, #0284c7 50%, #082f49 100%);
+      --orb-glow: rgba(56, 189, 248, 0.85);
+    }
+    .gothic-orb-sphere.DARK {
+      background: radial-gradient(circle at 35% 30%, #c084fc 0%, #7e22ce 50%, #2e1065 100%);
+      --orb-glow: rgba(192, 132, 252, 0.85);
+    }
+    .gothic-orb-sphere.WIND {
+      background: radial-gradient(circle at 35% 30%, #34d399 0%, #059669 50%, #022c22 100%);
+      --orb-glow: rgba(52, 211, 153, 0.85);
+    }
+    .gothic-orb-sphere.EARTH {
+      background: radial-gradient(circle at 35% 30%, #fbbf24 0%, #b45309 50%, #451a03 100%);
+      --orb-glow: rgba(251, 191, 36, 0.85);
+    }
+    .gothic-orb-sphere.LIGHTNING {
+      background: radial-gradient(circle at 35% 30%, #fde047 0%, #eab308 50%, #713f12 100%);
+      --orb-glow: rgba(253, 224, 71, 0.85);
+    }
+    .gothic-orb-sphere.LIGHT {
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fef08a 50%, #a16207 100%);
+      --orb-glow: rgba(254, 240, 138, 0.95);
+    }
+
+    .gothic-orb-element-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 6px #ffffff);
+    }
+
+    @media (max-width: 820px) {
+      .gothic-body-split {
+        grid-template-columns: 1fr;
+      }
+      .gothic-avatar-frame {
+        height: 320px;
+      }
+      .gothic-orb-assembly {
+        position: static;
+        transform: none;
+        margin: 10px auto;
+      }
+      .gothic-bottom-hotbar {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra de Navegação Superior Integrada -->
+  <%- include('../partials/navbar') %>
+
+  <!-- Mapeamento Fiel da Arte Real do Personagem -->
+  <%
+    function getHeroLocalImage(name, id) {
+      if (!name) return `/images/character/${id}`;
+      const n = name.toLowerCase();
+      let slug = 'default-avatar';
+      if (n.includes('kage')) slug = 'kage';
+      else if (n.includes('ignis')) slug = 'ignis';
+      else if (n.includes('aegis')) slug = 'aegis';
+      else if (n.includes('sylph')) slug = 'sylph';
+      else if (n.includes('raikou')) slug = 'raikou';
+      else if (n.includes('lumina')) slug = 'lumina';
+      else if (n.includes('aqua')) slug = 'aqua';
+      return `/images/characters/${slug}.png`;
+    }
+
+    const equippedChar = profile.unlockedCharacters.find(c => c.character_id === profile.main_character_id) || null;
+    const heroArtworkPath = equippedChar ? getHeroLocalImage(equippedChar.name, equippedChar.character_id) : `/images/avatar/${profile.id}`;
+    const elementCode = equippedChar && equippedChar.element ? equippedChar.element.toUpperCase() : 'FIRE';
+  %>
+
+  <!-- ========================================================================
+       JANELA GÓTICA CHAPADA DE PERFIL (DIABLO / MMO CHARACTER DOSSIER)
+       ======================================================================== -->
+  <main class="gothic-profile-wrapper">
+    <!-- Alertas Globais -->
+    <%- include('../partials/messages') %>
+
+    <div class="gothic-main-frame">
+      <!-- Cantoneiras Ornamentais de Ferro e Ouro -->
+      <span class="gothic-corner top-left"></span>
+      <span class="gothic-corner top-right"></span>
+      <span class="gothic-corner bottom-left"></span>
+      <span class="gothic-corner bottom-right"></span>
+
+      <!-- 1. Abas Superiores Góticas de Navegação com Botão do Grimório/Codex -->
+      <header class="gothic-nav-bar">
+        <div class="gothic-tabs-group">
+          <a href="javascript:void(0)" class="gothic-tab-link active" onclick="switchProfileTab('dossier', this)">DOSSIER</a>
+          <a href="javascript:void(0)" class="gothic-tab-link" onclick="switchProfileTab('security', this)">SECURITY</a>
+          <a href="javascript:void(0)" class="gothic-tab-link" onclick="switchProfileTab('roster', this)">ROSTER</a>
+          <a href="javascript:void(0)" class="gothic-tab-link codex-tab-highlight" onclick="openCodexModal()">
+            <span class="material-symbols-outlined" style="font-size: 16px;">menu_book</span> CODEX DE REGRAS
+          </a>
+          <a href="/dashboard" class="gothic-tab-link">COMMAND (QG)</a>
+        </div>
+
+        <button type="button" class="gothic-theme-toggle-btn" onclick="toggleGothicTheme()" title="Alternar Modo Claro e Escuro">
+          <span class="material-symbols-outlined" style="font-size: 16px;">contrast</span>
+          <span id="themeText">DARK</span>
+        </button>
+      </header>
+
+      <!-- 2. Cabeçalho de Status: Nível, Brasão Central e Ranking ELO -->
+      <section class="gothic-status-header">
+        <div class="gothic-level-block">
+          <h1 class="gothic-level-number"><%= profile.level %> LEVEL</h1>
+          <div class="gothic-class-title"><%= profile.role %> &bull; <%= profile.username %></div>
+        </div>
+
+        <!-- Medalhão Central Heraldico com Ícone do Herói -->
+        <div class="gothic-emblem-medallion">
+          <span class="material-symbols-outlined" style="font-size: 30px; color: #ff3333; filter: drop-shadow(0 0 6px rgba(255,51,51,0.8));">military_tech</span>
+        </div>
+
+        <!-- Rating ELO e Poder Total -->
+        <div class="gothic-meta-box">
+          <div class="gothic-meta-rating"><%= profile.ranking.rating %> ELO</div>
+          <div class="gothic-meta-label">
+            POSIÇÃO #<%= profile.ranking.position || 'N/A' %> &bull; <%= profile.power_index %> PWR
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Painel Principal Duplo: Cartel & Atributos à Esquerda, Avatar à Direita -->
+      <div class="gothic-tab-panel active" id="tab-dossier">
+        <section class="gothic-body-split">
+          
+          <!-- PAINEL DA ESQUERDA: DADOS DE COMBATE E ATRIBUTOS -->
+          <div class="gothic-panel-box">
+            <div>
+              <div class="gothic-stat-row">
+                <span class="gothic-stat-name">CODINOME</span>
+                <span class="gothic-stat-value"><%= profile.username %></span>
+              </div>
+              <div class="gothic-divider-line"><span class="filigree-glyph">&#10070;</span></div>
+
+              <div class="gothic-stat-row">
+                <span class="gothic-stat-name">TOTAL DE DUELOS</span>
+                <span class="gothic-stat-value"><%= profile.stats.totalBattles %></span>
+              </div>
+              <div class="gothic-divider-line"><span class="filigree-glyph">&#10070;</span></div>
+
+              <div class="gothic-stat-row">
+                <span class="gothic-stat-name">CARTEL (V / D)</span>
+                <span class="gothic-stat-value text-success"><%= profile.stats.wins %>V / <%= profile.stats.losses %>D</span>
+              </div>
+              <div class="gothic-divider-line"><span class="filigree-glyph">&#10070;</span></div>
+
+              <div class="gothic-stat-row">
+                <span class="gothic-stat-name">TAXA DE VITÓRIA</span>
+                <span class="gothic-stat-value text-warning"><%= profile.stats.winRate %>%</span>
+              </div>
+            </div>
+
+            <!-- Os 4 Valores Dourados com Ícones -->
+            <div class="gothic-core-stats-grid">
+              <div>
+                <div class="gothic-gold-number"><%= profile.stats.wins %></div>
+                <div class="gothic-stat-circle-icon" title="Vitórias">
+                  <span class="material-symbols-outlined text-success">trophy</span>
+                </div>
+              </div>
+              <div>
+                <div class="gothic-gold-number"><%= profile.stats.losses %></div>
+                <div class="gothic-stat-circle-icon" title="Derrotas">
+                  <span class="material-symbols-outlined text-danger">close</span>
+                </div>
+              </div>
+              <div>
+                <div class="gothic-gold-number"><%= profile.power_index %></div>
+                <div class="gothic-stat-circle-icon" title="Índice de Poder">
+                  <span class="material-symbols-outlined text-warning">bolt</span>
+                </div>
+              </div>
+              <div>
+                <div class="gothic-gold-number"><%= profile.coins %></div>
+                <div class="gothic-stat-circle-icon" title="Moedas de Ouro">
+                  <span class="material-symbols-outlined text-warning">monetization_on</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulário Embutido de Atualização Cadastral -->
+            <form action="/profile/update" method="POST" class="mt-3">
+              <div class="mb-2">
+                <label class="small text-muted font-monospace text-uppercase">Alterar Nome de Usuário:</label>
+                <input type="text" class="gothic-input" name="username" value="<%= profile.username %>" required minlength="3" maxlength="30">
+              </div>
+
+              <div class="mb-3">
+                <label class="small text-muted font-monospace text-uppercase">Equipar Herói Titular:</label>
+                <select class="gothic-select" name="mainCharacterId">
+                  <% profile.unlockedCharacters.forEach(function(char) { %>
+                    <option value="<%= char.character_id %>" <%= profile.main_character_id === char.character_id ? 'selected' : '' %>>
+                      <%= char.name %> (LV <%= char.level %> &bull; <%= char.element %>)
+                    </option>
+                  <% }); %>
+                </select>
+              </div>
+
+              <button type="submit" class="gothic-btn-submit w-100 justify-content-center">
+                <span class="material-symbols-outlined">save</span> Atualizar Folha de Perfil
+              </button>
+            </form>
+          </div>
+
+          <!-- PAINEL DA DIREITA: RETRATO DO JOGADOR COM UPLOAD BYTEA -->
+          <div class="gothic-panel-box d-flex flex-column justify-content-between">
+            <div class="gothic-avatar-frame">
+              <img 
+                src="/images/avatar/<%= profile.id %>" 
+                alt="<%= profile.username %>" 
+                class="gothic-avatar-art" 
+                onerror="this.onerror=null; this.src='/images/default-avatar.png';"
+              >
+
+              <!-- Botão de Upload com Tooltip -->
+              <label for="avatarFileInput" class="gothic-avatar-upload-trigger" title="Substituir Avatar (BYTEA)">
+                <span class="material-symbols-outlined" style="font-size: 20px;">photo_camera</span>
+              </label>
+
+              <!-- Formulário Oculto de Upload em BYTEA -->
+              <form id="avatarUploadForm" action="/profile/avatar" method="POST" enctype="multipart/form-data" class="d-none">
+                <input type="file" id="avatarFileInput" name="avatar" accept="image/png, image/jpeg, image/webp" onchange="document.getElementById('avatarUploadForm').submit()">
+              </form>
+            </div>
+
+            <div class="p-2 bg-black border border-secondary border-opacity-25 text-center mt-2 font-monospace small">
+              <span class="text-dim">E-MAIL:</span> <span class="text-main fw-bold"><%= profile.email %></span>
+              <div class="text-dim" style="font-size: 0.7rem;">Membro desde: <%= new Date(profile.created_at).toLocaleDateString('pt-BR') %></div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+
+      <!-- ABA 2: SEGURANÇA E ALTERAÇÃO DE SENHA -->
+      <div class="gothic-tab-panel" id="tab-security">
+        <section class="gothic-management-container pt-3">
+          <div class="gothic-panel-box max-w-lg mx-auto">
+            <div class="gothic-stat-name mb-3" style="color: var(--gothic-text-gold); border-bottom: 1px solid var(--gothic-border-gold); padding-bottom: 8px;">
+              Redefinição de Credencial Secreta
+            </div>
+
+            <form action="/profile/change-password" method="POST" class="d-flex flex-column gap-3">
+              <div>
+                <label class="small text-muted font-monospace text-uppercase">Senha Atual:</label>
+                <input type="password" class="gothic-input" name="currentPassword" required autocomplete="current-password">
+              </div>
+
+              <div>
+                <label class="small text-muted font-monospace text-uppercase">Nova Senha (Mínimo 8 Dígitos):</label>
+                <input type="password" class="gothic-input" name="newPassword" required minlength="8" autocomplete="new-password">
+              </div>
+
+              <div>
+                <label class="small text-muted font-monospace text-uppercase">Confirmar Nova Senha:</label>
+                <input type="password" class="gothic-input" name="confirmNewPassword" required minlength="8" autocomplete="new-password">
+              </div>
+
+              <button type="submit" class="gothic-btn-submit justify-content-center mt-2">
+                <span class="material-symbols-outlined">key</span> Salvar Nova Senha
+              </button>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <!-- ABA 3: HERÓIS DESBLOQUEADOS (ROSTER) -->
+      <div class="gothic-tab-panel" id="tab-roster">
+        <section class="gothic-management-container pt-3">
+          <div class="gothic-roster-grid">
+            <% profile.unlockedCharacters.forEach(function(c) { %>
+              <div class="gothic-roster-card">
+                <img 
+                  src="<%= getHeroLocalImage(c.name, c.character_id) %>" 
+                  alt="<%= c.name %>" 
+                  class="roster-thumb"
+                  onerror="this.onerror=null; this.src='/images/character/<%= c.character_id %>'; if(this.src.endsWith('/default-avatar.png')) this.src='/images/default-avatar.png';"
+                >
+                <div class="font-monospace fw-bold text-main small text-truncate"><%= c.name %></div>
+                <div class="small font-monospace" style="color: var(--gothic-text-gold); font-size: 0.7rem;"><%= c.element %> &bull; LV <%= c.level %></div>
+                
+                <a href="/characters/<%= c.character_id %>" class="gothic-btn-submit py-1 px-2 mt-2 w-100 justify-content-center" style="font-size: 0.7rem;">
+                  Ficha Técnica
+                </a>
+              </div>
+            <% }); %>
+          </div>
+        </section>
+      </div>
+
+      <!-- 4. Barra Inferior com Orbe da Facção -->
+      <footer class="gothic-bottom-hotbar">
+        <div class="d-flex align-items-center gap-2">
+          <a href="/characters" class="gothic-tab-link" title="Heróis">
+            <span class="material-symbols-outlined" style="font-size: 22px;">sports_martial_arts</span>
+          </a>
+          <a href="/decks" class="gothic-tab-link" title="Baralhos">
+            <span class="material-symbols-outlined" style="font-size: 22px;">backpack</span>
+          </a>
+          <a href="/missions" class="gothic-tab-link" title="Missões">
+            <span class="material-symbols-outlined" style="font-size: 22px;">task_alt</span>
+          </a>
+        </div>
+
+        <!-- ORBE ELEMENTAL CENTRAL CONFORME A FACÇÃO DO HERÓI TITULAR -->
+        <div class="gothic-orb-assembly">
+          <div class="gothic-orb-sphere <%= elementCode %>" title="Facção Elemental: <%= elementCode %>">
+            <img 
+              src="/images/icons/<%= elementCode.toLowerCase() %>.png" 
+              alt="<%= elementCode %>" 
+              class="gothic-orb-element-img"
+              onerror="this.style.display='none'"
+            >
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="/ranking" class="gothic-tab-link" title="Classificação">
+            <span class="material-symbols-outlined" style="font-size: 22px;">military_tech</span>
+          </a>
+          <a href="/battle" class="gothic-tab-link" title="Arena de Combate">
+            <span class="material-symbols-outlined" style="font-size: 22px;">swords</span>
+          </a>
+          <a href="/dashboard" class="gothic-tab-link" title="Quartel-General">
+            <span class="material-symbols-outlined" style="font-size: 22px;">dashboard</span>
+          </a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       MODAL PAGINADO / GRIMÓRIO DE REGRAS TÁTICAS (CODEX DE COMBATE)
+       ======================================================================== -->
+  <div class="codex-modal-overlay" id="codexModalOverlay">
+    <div class="codex-tome-card">
+      <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-warning border-opacity-25 pb-2">
+        <div class="d-flex align-items-center gap-2">
+          <span class="material-symbols-outlined text-warning" style="font-size: 26px;">menu_book</span>
+          <h2 class="h5 fw-bold font-monospace text-main mb-0" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">Grimório Tático &bull; Regras da Arena</h2>
+        </div>
+        <button type="button" class="gothic-theme-toggle-btn" onclick="closeCodexModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Navegação Rápida entre Capítulos -->
+      <div class="codex-chapter-nav" id="codexNavTabs">
+        <button type="button" class="codex-chapter-btn active" onclick="goToCodexChapter(0)">1. PRINCÍPIOS & MODOS</button>
+        <button type="button" class="codex-chapter-btn" onclick="goToCodexChapter(1)">2. ENERGIA & TURNOS</button>
+        <button type="button" class="codex-chapter-btn" onclick="goToCodexChapter(2)">3. BREAK SYSTEM</button>
+        <button type="button" class="codex-chapter-btn" onclick="goToCodexChapter(3)">4. DEFESA & CONTRA-ATAQUE</button>
+        <button type="button" class="codex-chapter-btn" onclick="goToCodexChapter(4)">5. COMBOS & ELEMENTOS</button>
+        <button type="button" class="codex-chapter-btn" onclick="goToCodexChapter(5)">6. PODER & RANKING</button>
+      </div>
+
+      <!-- Conteúdo Dinâmico do Capítulo -->
+      <div class="codex-content-body" id="codexChapterContent">
+        <!-- Injetado Dinamicamente via JavaScript -->
+      </div>
+
+      <!-- Controles Inferiores de Paginação -->
+      <div class="codex-footer-controls">
+        <button type="button" class="gothic-btn-submit py-1 px-3" id="codexPrevBtn" onclick="prevCodexChapter()">
+          <span class="material-symbols-outlined">arrow_back</span> Anterior
+        </button>
+
+        <span class="font-monospace small text-dim" id="codexStepIndicator">Capítulo 1 de 6</span>
+
+        <button type="button" class="gothic-btn-submit py-1 px-3" id="codexNextBtn" onclick="nextCodexChapter()">
+          Próximo <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       LÓGICA JAVASCRIPT: TEMA, ABAS E MOTOR DO GRIMÓRIO (CODEX)
+       ======================================================================== -->
+  <script>
+    // 1. Motor de Alternância de Tema Claro e Escuro
+    function applyGothicTheme() {
+      const theme = localStorage.getItem('joker_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = theme === 'dark' ? 'DARK' : 'LIGHT';
+    }
+
+    function toggleGothicTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('joker_theme', next);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = next === 'dark' ? 'DARK' : 'LIGHT';
+
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+    }
+
+    applyGothicTheme();
+
+    // 2. Alternância de Abas na Página de Perfil
+    function switchProfileTab(tabId, el) {
+      document.querySelectorAll('.gothic-tabs-group .gothic-tab-link:not(.codex-tab-highlight)').forEach(link => link.classList.remove('active'));
+      el.classList.add('active');
+
+      document.querySelectorAll('.gothic-tab-panel').forEach(panel => panel.classList.remove('active'));
+      const activePanel = document.getElementById('tab-' + tabId);
+      if (activePanel) activePanel.classList.add('active');
+
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+    }
+
+    // 3. CAPÍTULOS DETALHADOS DO GRIMÓRIO DE REGRAS TÁTICAS
+    const codexChapters = [
+      {
+        title: "Capítulo 1: Princípios Centrais & Modos de Duelo",
+        html: `
+          <div class="codex-rule-box">
+            <strong>Estratégia Superior aos Números:</strong> No Joker RPG, maior índice numérico não garante vitória. O domínio da economia de energia, antecipação de esquivas, quebra de postura e combinações de cartas permitem que combatentes com menor poder derrotem oponentes lendários.
+          </div>
+          <div class="codex-rule-box">
+            <strong>Modos de Combate:</strong>
+            <ul style="margin: 6px 0 0 0; padding-left: 20px;">
+              <li><strong>Treinamento Tático (PvE):</strong> Confronto solo contra autômato de inteligência adaptativa para testar baralhos sem penalidade de Rating.</li>
+              <li><strong>Duelo Casual (PvP):</strong> Duelo síncrono online via WebSockets para cumprimento de missões diárias sem impacto no ELO.</li>
+              <li><strong>Arena Ranqueada (PvP ELO):</strong> Disputa competitiva oficial da temporada valendo pontuação no Quadro de Honra (&plusmn;20 a 25 ELO) e multiplicador de recompensas.</li>
+            </ul>
+          </div>
+        `
+      },
+      {
+        title: "Capítulo 2: Economia de Energia & Turnos",
+        html: `
+          <div class="codex-rule-box">
+            <strong>Reserva e Limite:</strong> Cada combatente possui uma reserva com teto máximo de <strong>10 pontos de energia</strong>. Ações só podem ser executadas se o jogador possuir energia suficiente no momento da emissão do comando.
+          </div>
+          <div class="codex-rule-box">
+            <strong>Custos Padronizados:</strong>
+            <ul style="margin: 6px 0 0 0; padding-left: 20px;">
+              <li><strong>Ataque Físico/Básico:</strong> 1 Ponto de Energia</li>
+              <li><strong>Postura de Bloqueio (Block) / Esquiva (Dodge):</strong> 1 Ponto de Energia</li>
+              <li><strong>Técnicas Utilitárias & Ripostagem (Counter):</strong> 2 Pontos de Energia</li>
+              <li><strong>Golpes Especiais:</strong> 3 a 4 Pontos de Energia</li>
+              <li><strong>Movimento Finalizador (Ultimate):</strong> 5 Pontos de Energia</li>
+            </ul>
+          </div>
+          <div class="codex-rule-box">
+            <strong>Regeneração Passiva:</strong> A cada início de turno, o combatente recupera passivamente <strong>2 pontos de energia</strong> e compra cartas até completar o limite máximo de <strong>5 cartas na mão</strong>. O efeito FREEZE suspende a recuperação passiva de energia.
+          </div>
+        `
+      },
+      {
+        title: "Capítulo 3: Sistema de Postura (Break System)",
+        html: `
+          <div class="codex-rule-box">
+            <strong>A Barra de Break:</strong> Além dos Pontos de Vida (HP), todo personagem possui uma barra de Postura (Break Gauge) iniciando em 100%. Golpes pesados e técnicas de terra esgotam a postura adversária.
+          </div>
+          <div class="codex-rule-box">
+            <strong>Estado de BREAK!:</strong> Ao ter a barra de postura zerada (0%), o combatente entra em colapso:
+            <ul style="margin: 6px 0 0 0; padding-left: 20px;">
+              <li><strong>Defesa Zerada:</strong> A defesa base do personagem cai para 0.</li>
+              <li><strong>Dano Amplificado:</strong> Todo dano sofrido recebe um multiplicador de vulnerabilidade de <strong>+50% de dano real</strong>.</li>
+              <li><strong>Incapacidade Defensiva:</strong> O alvo não pode assumir posturas de Block, Dodge ou Counter enquanto estiver em Break.</li>
+              <li><strong>Recuperação:</strong> Após 1 rodada de vulnerabilidade, o alvo recupera 50% da postura e sai do estado de Break.</li>
+            </ul>
+          </div>
+        `
+      },
+      {
+        title: "Capítulo 4: Manobras Defensivas & Reações",
+        html: `
+          <div class="codex-rule-box">
+            <strong>BLOCK (Bloqueio Firme):</strong> Consome 1 energia. O combatente entra em guarda, atenuando entre 40% a 80% do dano bruto do próximo ataque com base no seu atributo de Defesa (DEF) e reduzindo a quebra de postura em 50%.
+          </div>
+          <div class="codex-rule-box">
+            <strong>DODGE (Esquiva Ágil):</strong> Consome 1 energia. Concede chance percentual autoritativa baseada na Velocidade (SPD) de <strong>evadir 100% do impacto e dano</strong> do ataque. Falha se a precisão do golpe for garantida.
+          </div>
+          <div class="codex-rule-box">
+            <strong>COUNTER (Ripostagem Tática):</strong> Consome 2 energias. Absorve 30% do dano sofrido e desfere um contra-ataque automático instantâneo refletindo <strong>50% do dano</strong> diretamente no agressor.
+          </div>
+          <div class="codex-rule-box">
+            <strong>BARRIER (Barreira Mística):</strong> Escudo mágico temporário que absorve uma quantidade absoluta de dano antes que o HP seja atingido.
+          </div>
+        `
+      },
+      {
+        title: "Capítulo 5: Cadeia de Combos & Afinidades Elementais",
+        html: `
+          <div class="codex-rule-box">
+            <strong>Multiplicadores de Combo:</strong> Jogar cartas compatíveis na mesma rodada aciona cadências ofensivas:
+            <ul style="margin: 6px 0 0 0; padding-left: 20px;">
+              <li><strong>Combo x2:</strong> +15% de Dano</li>
+              <li><strong>Combo x3:</strong> +30% de Dano</li>
+              <li><strong>Combo x4:</strong> +50% de Dano</li>
+              <li><strong>Combo x5:</strong> +80% de Dano Máximo</li>
+            </ul>
+          </div>
+          <div class="codex-rule-box">
+            <strong>Matriz de Afinidades Elementais:</strong>
+            <ul style="margin: 6px 0 0 0; padding-left: 20px;">
+              <li><strong>FOGO (FIRE):</strong> Forte contra Vento (+35%), fraco contra Água (-25%). Aplica BURN (DoT contínuo).</li>
+              <li><strong>ÁGUA (WATER):</strong> Forte contra Fogo e Terra (+35%). Aplica FREEZE (trava energia) e WEAKNESS.</li>
+              <li><strong>VENTO (WIND):</strong> Forte contra Terra (+35%). Alta taxa de esquiva e quebra de ritmo.</li>
+              <li><strong>TERRA (EARTH):</strong> Forte contra Trovão (+35%). Máximo poder de destruição de Break e absorção.</li>
+              <li><strong>TROVÃO (LIGHTNING):</strong> Forte contra Água (+35%). Aplica SHOCK (chance de anulação de ação).</li>
+              <li><strong>LUZ & TREVAS (LIGHT & DARK):</strong> Causam +35% de dano mútuo entre si. Trevas aplica POISON corrosivo e Luz dissipa penalidades.</li>
+            </ul>
+          </div>
+        `
+      },
+      {
+        title: "Capítulo 6: Índice de Poder & Pontuação ELO",
+        html: `
+          <div class="codex-rule-box">
+            <strong>Cálculo do Power Index:</strong> O servidor calcula o poder global ponderando atributos primários e baralho:
+            <br><em>Power = (HP &times; 0.25) + (ATK &times; 1.85) + (DEF &times; 1.45) + (SPD &times; 1.20) + (Crit &times; 8.5) + Sinergia Média do Baralho Ativo.</em>
+          </div>
+          <div class="codex-rule-box">
+            <strong>Temporadas Competitivas & ELO:</strong>
+            A pontuação inicial padrão é de 1000 ELO. Vitórias em arena ranqueada adicionam entre 20 a 25 pontos, e derrotas subtraem pontos com piso mínimo de segurança. Os três primeiros colocados no final de cada temporada são coroados no Pódio da Liga.
+          </div>
+          <div class="codex-rule-box">
+            <strong>Integridade Absoluta:</strong> Todos os cálculos numéricos, vitórias, deduções de HP e concessão de XP ocorrem exclusivamente no backend com transações atômicas no Neon PostgreSQL.
+          </div>
+        `
+      }
+    ];
+
+    let currentCodexIndex = 0;
+
+    function renderCodexChapter(index) {
+      currentCodexIndex = index;
+      const chapter = codexChapters[index];
+      const contentEl = document.getElementById('codexChapterContent');
+      contentEl.innerHTML = `
+        <h3>${chapter.title}</h3>
+        ${chapter.html}
+      `;
+
+      // Atualiza Abas Superiores
+      const tabs = document.querySelectorAll('#codexNavTabs .codex-chapter-btn');
+      tabs.forEach((tab, i) => {
+        if (i === index) tab.classList.add('active');
+        else tab.classList.remove('active');
+      });
+
+      // Atualiza Indicador e Botões
+      document.getElementById('codexStepIndicator').textContent = `Capítulo ${index + 1} de ${codexChapters.length}`;
+      document.getElementById('codexPrevBtn').disabled = (index === 0);
+      document.getElementById('codexNextBtn').innerHTML = (index === codexChapters.length - 1)
+        ? `Concluir Leitura <span class="material-symbols-outlined">done</span>`
+        : `Próximo <span class="material-symbols-outlined">arrow_forward</span>`;
+    }
+
+    function openCodexModal() {
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playCardSelect();
+      }
+      renderCodexChapter(0);
+      document.getElementById('codexModalOverlay').style.display = 'flex';
+    }
+
+    function closeCodexModal() {
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+      document.getElementById('codexModalOverlay').style.display = 'none';
+    }
+
+    function nextCodexChapter() {
+      if (currentCodexIndex < codexChapters.length - 1) {
+        if (window.Joker && window.Joker.Audio) {
+          window.Joker.Audio.playUiClick();
+        }
+        renderCodexChapter(currentCodexIndex + 1);
+      } else {
+        closeCodexModal();
+      }
+    }
+
+    function prevCodexChapter() {
+      if (currentCodexIndex > 0) {
+        if (window.Joker && window.Joker.Audio) {
+          window.Joker.Audio.playUiClick();
+        }
+        renderCodexChapter(currentCodexIndex - 1);
+      }
+    }
+
+    function goToCodexChapter(index) {
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+      renderCodexChapter(index);
+    }
+
+    // Alertas e Mensagens Flash
+    document.addEventListener('DOMContentLoaded', () => {
+      <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+        Swal.fire({
+          title: 'Registro Atualizado',
+          text: "<%= successMessage %>",
+          icon: 'success',
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: '#b38b4d',
+          background: '#140707',
+          color: '#eae0d5'
+        });
+      <% } %>
+
+      <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+        Swal.fire({
+          title: 'Atenção Tática',
+          text: "<%= errorMessage %>",
+          icon: 'error',
+          confirmButtonText: 'Corrigir',
+          confirmButtonColor: '#781c2f',
+          background: '#140707',
+          color: '#eae0d5'
+        });
+      <% } %>
+    });
+  </script>
+
+  <!-- Rodapé Oficial -->
+  <%- include('../partials/footer') %>
+</body>
+</html>

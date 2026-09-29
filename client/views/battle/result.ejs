@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <%- include('../partials/head') %>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Outfit & Cinzel (Tipografia Gótica / Dark Fantasy) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Google Material Symbols Oficial (Sem Emojis) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Biblioteca SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* ==========================================================================
+       JOKER RPG — RESULTADO DE COMBATE DARK FANTASY (DESIGN CHAPADO DIABLO / MMO)
+       Molduras em Ferro Forjado, Estandarte Heraldico e Telemetria em Pedra
+       ========================================================================== */
+
+    :root[data-theme="dark"] {
+      --gothic-bg: #090404;
+      --gothic-frame-bg: #140707;
+      --gothic-panel: #0d0404;
+      --gothic-panel-card: linear-gradient(180deg, #180808 0%, #0d0303 100%);
+      --gothic-border-outer: #381010;
+      --gothic-border-gold: #b38b4d;
+      --gothic-border-gold-glow: rgba(179, 139, 77, 0.45);
+      --gothic-filigree: #8a6530;
+      --gothic-text: #eae0d5;
+      --gothic-text-gold: #d4af37;
+      --gothic-text-muted: #8e7a6d;
+      --gothic-red-glow: rgba(220, 38, 38, 0.7);
+      --gothic-green-glow: rgba(16, 185, 129, 0.6);
+      --gothic-slot-bg: #190505;
+      --gothic-slot-border: #4a1515;
+      --gothic-hotbar-bg: #100505;
+    }
+
+    :root[data-theme="light"] {
+      --gothic-bg: #ece6dc;
+      --gothic-frame-bg: #dcd3c3;
+      --gothic-panel: #f4eee2;
+      --gothic-panel-card: linear-gradient(180deg, #ffffff 0%, #f1e9dc 100%);
+      --gothic-border-outer: #8a6e55;
+      --gothic-border-gold: #966f2d;
+      --gothic-border-gold-glow: rgba(150, 111, 45, 0.3);
+      --gothic-filigree: #78531e;
+      --gothic-text: #261c14;
+      --gothic-text-gold: #825a17;
+      --gothic-text-muted: #6e5a4c;
+      --gothic-red-glow: rgba(185, 28, 28, 0.4);
+      --gothic-green-glow: rgba(5, 150, 105, 0.4);
+      --gothic-slot-bg: #e2d7c5;
+      --gothic-slot-border: #9c846e;
+      --gothic-hotbar-bg: #cfc2ad;
+    }
+
+    body {
+      background: var(--gothic-bg) !important;
+      color: var(--gothic-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      user-select: none;
+    }
+
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .gothic-result-wrapper {
+      max-width: 1200px;
+      margin: 20px auto 50px auto;
+      padding: 0 16px;
+    }
+
+    /* Moldura Principal de Pedra de Ferro */
+    .gothic-main-frame {
+      background: var(--gothic-frame-bg);
+      border: 4px solid var(--gothic-border-outer);
+      border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(0, 0, 0, 0.85);
+      position: relative;
+      padding: 8px;
+    }
+
+    /* Cantoneiras Metálicas Ornamentais */
+    .gothic-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid var(--gothic-border-gold);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .gothic-corner.top-left { top: 2px; left: 2px; border-right: none; border-bottom: none; }
+    .gothic-corner.top-right { top: 2px; right: 2px; border-left: none; border-bottom: none; }
+    .gothic-corner.bottom-left { bottom: 2px; left: 2px; border-right: none; border-top: none; }
+    .gothic-corner.bottom-right { bottom: 2px; right: 2px; border-left: none; border-top: none; }
+
+    /* Barra Superior de Abas */
+    .gothic-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #2d0b0b;
+      background: #090202;
+      padding: 6px 16px;
+    }
+
+    .gothic-tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .gothic-tab-link {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #634f47;
+      text-decoration: none;
+      padding: 6px 12px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .gothic-tab-link:hover {
+      color: #b58d60;
+    }
+
+    .gothic-tab-link.active {
+      color: #ffffff;
+      text-shadow: 0 0 10px var(--gothic-red-glow), 0 0 20px rgba(255, 30, 0, 0.8);
+    }
+
+    .gothic-tab-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #ff3b30 50%, transparent 100%);
+      box-shadow: 0 0 8px #ff3b30;
+    }
+
+    .gothic-theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--gothic-filigree);
+      color: var(--gothic-text-gold);
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-theme-toggle-btn:hover {
+      box-shadow: 0 0 8px var(--gothic-border-gold-glow);
+    }
+
+    /* Cabeçalho de Status */
+    .gothic-result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 2px solid #2d0b0b;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .gothic-header-title-box {
+      text-align: left;
+    }
+
+    .gothic-header-main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--gothic-text);
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .gothic-header-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      color: var(--gothic-text-gold);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .gothic-emblem-medallion {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2e0909 0%, #0d0202 100%);
+      border: 2px solid #5a1818;
+      box-shadow: inset 0 0 10px #000, 0 0 15px rgba(220, 38, 38, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ==========================================================================
+       ESTANDARTE HERALDICO DE RESULTADO (VITÓRIA / DERROTA / EMPATE)
+       ========================================================================== */
+    .gothic-outcome-banner {
+      background: var(--gothic-panel);
+      border: 2px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.95);
+      padding: 34px 24px;
+      margin: 14px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gothic-outcome-banner.victory {
+      border-color: #10b981;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 0 25px var(--gothic-green-glow);
+    }
+
+    .gothic-outcome-banner.defeat {
+      border-color: #ef4444;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 0 25px var(--gothic-red-glow);
+    }
+
+    .gothic-outcome-banner.draw {
+      border-color: #f59e0b;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+
+    .outcome-crest-symbol {
+      font-size: 54px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .outcome-crest-symbol.victory {
+      color: #10b981;
+      filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.8));
+    }
+
+    .outcome-crest-symbol.defeat {
+      color: #ef4444;
+      filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.8));
+    }
+
+    .outcome-crest-symbol.draw {
+      color: #f59e0b;
+      filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.8));
+    }
+
+    .outcome-banner-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      line-height: 1;
+      margin: 0 0 8px 0;
+    }
+
+    .outcome-banner-title.victory {
+      color: #10b981;
+      text-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+    }
+
+    .outcome-banner-title.defeat {
+      color: #ef4444;
+      text-shadow: 0 0 16px rgba(239, 68, 68, 0.6);
+    }
+
+    .outcome-banner-title.draw {
+      color: #f59e0b;
+      text-shadow: 0 0 16px rgba(245, 158, 11, 0.6);
+    }
+
+    .outcome-banner-sub {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gothic-text-muted);
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+    }
+
+    /* Painel de Métricas do Combate */
+    .outcome-metrics-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(179, 139, 77, 0.25);
+      font-family: 'Cinzel', serif;
+    }
+
+    .outcome-metric-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .outcome-metric-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gothic-text-gold);
+      line-height: 1.1;
+    }
+
+    .outcome-metric-lbl {
+      font-size: 0.68rem;
+      color: var(--gothic-text-dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* Botões de Ação Imediata */
+    .outcome-actions-cluster {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .gothic-btn {
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 0.84rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 10px 22px;
+      border-radius: 2px;
+      border: 1px solid var(--gothic-border-gold);
+      background: linear-gradient(180deg, #3d1414 0%, #170505 100%);
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      transition: all 0.15s ease;
+    }
+
+    .gothic-btn:hover {
+      background: linear-gradient(180deg, #6c1c1c 0%, #2e0909 100%);
+      border-color: #ffaa00;
+      color: #ffdd44;
+      transform: scale(1.02);
+    }
+
+    .gothic-btn.cta-primary {
+      background: linear-gradient(180deg, #991b1b 0%, #450a0a 100%);
+      border-color: #ffaa00;
+      box-shadow: 0 0 14px rgba(220, 38, 38, 0.5);
+    }
+
+    .gothic-btn.cta-primary:hover {
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.8);
+    }
+
+    .gothic-btn.secondary {
+      background: transparent;
+      border-color: var(--gothic-border-gold);
+      color: var(--gothic-text-gold);
+    }
+
+    .gothic-btn.secondary:hover {
+      background: rgba(179, 139, 77, 0.15);
+      color: #ffffff;
+    }
+
+    /* ==========================================================================
+       TABELA DE TELEMETRIA PASSO A PASSO (STONE REPLAY SCROLL)
+       ========================================================================== */
+    .gothic-telemetry-container {
+      background: var(--gothic-panel);
+      border: 2px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.9);
+      margin: 0 14px 14px 14px;
+      overflow: hidden;
+    }
+
+    .gothic-telemetry-header {
+      background: #110404;
+      border-bottom: 2px solid var(--gothic-border-gold);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gothic-telemetry-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 1.5px;
+      color: var(--gothic-text-gold);
+      text-transform: uppercase;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gothic-telemetry-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+      color: var(--gothic-text);
+      font-family: 'Cinzel', serif;
+    }
+
+    .gothic-telemetry-table th {
+      background: #190505;
+      color: var(--gothic-text-gold);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gothic-border-gold);
+    }
+
+    .gothic-telemetry-table td {
+      padding: 10px 16px;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(179, 139, 77, 0.2);
+      font-size: 0.84rem;
+      transition: background 0.15s ease;
+    }
+
+    .gothic-telemetry-table tr:hover td {
+      background: rgba(179, 139, 77, 0.1);
+    }
+
+    .gothic-table-icon {
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
+      vertical-align: middle;
+    }
+
+    /* Barra Inferior com Orbe da Facção */
+    .gothic-bottom-hotbar {
+      background: var(--gothic-hotbar-bg);
+      border-top: 2px solid #3d0c0c;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .gothic-orb-assembly {
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 25;
+    }
+
+    .gothic-orb-sphere {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px var(--orb-glow), inset 0 -6px 14px rgba(0, 0, 0, 0.8);
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .gothic-orb-sphere.victory {
+      background: radial-gradient(circle at 35% 30%, #34d399 0%, #059669 50%, #022c22 100%);
+      --orb-glow: rgba(52, 211, 153, 0.85);
+    }
+
+    .gothic-orb-sphere.defeat {
+      background: radial-gradient(circle at 35% 30%, #ff7700 0%, #cc1100 50%, #440000 100%);
+      --orb-glow: rgba(255, 60, 0, 0.85);
+    }
+
+    .gothic-orb-sphere.draw {
+      background: radial-gradient(circle at 35% 30%, #fbbf24 0%, #b45309 50%, #451a03 100%);
+      --orb-glow: rgba(251, 191, 36, 0.85);
+    }
+
+    @media (max-width: 768px) {
+      .outcome-metrics-strip {
+        gap: 12px;
+      }
+      .outcome-banner-title {
+        font-size: 1.8rem;
+      }
+      .gothic-result-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .gothic-nav-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .gothic-orb-assembly {
+        position: static;
+        transform: none;
+        margin: 10px auto;
+      }
+      .gothic-bottom-hotbar {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra de Navegação Superior Integrada -->
+  <%- include('../partials/navbar') %>
+
+  <!-- ========================================================================
+       JANELA GÓTICA CHAPADA DE DESFECHO (DIABLO / CLASSIC RPG SHELL)
+       ======================================================================== -->
+  <main class="gothic-result-wrapper">
+    <!-- Alertas Globais -->
+    <%- include('../partials/messages') %>
+
+    <div class="gothic-main-frame">
+      <!-- Cantoneiras Ornamentais de Ferro e Ouro -->
+      <span class="gothic-corner top-left"></span>
+      <span class="gothic-corner top-right"></span>
+      <span class="gothic-corner bottom-left"></span>
+      <span class="gothic-corner bottom-right"></span>
+
+      <!-- 1. Abas Superiores Idênticas à Referência -->
+      <header class="gothic-nav-bar">
+        <div class="gothic-tabs-group">
+          <a href="javascript:void(0)" class="gothic-tab-link active">DISPATCH (DESFECHO)</a>
+          <a href="/battle" class="gothic-tab-link">ARENA</a>
+          <a href="/history" class="gothic-tab-link">HISTORY</a>
+          <a href="/dashboard" class="gothic-tab-link">COMMAND (QG)</a>
+        </div>
+
+        <button type="button" class="gothic-theme-toggle-btn" onclick="toggleGothicTheme()" title="Alternar Modo Claro e Escuro">
+          <span class="material-symbols-outlined" style="font-size: 16px;">contrast</span>
+          <span id="themeText">DARK</span>
+        </button>
+      </header>
+
+      <!-- 2. Cabeçalho de Status: Título, Medalhão e Duração -->
+      <section class="gothic-result-header">
+        <div class="gothic-header-title-box">
+          <h1 class="gothic-header-main-title">Relatório Tático de Combate</h1>
+          <div class="gothic-header-sub">SALA #<%= battle.id.slice(0, 8) %> &bull; <%= battle.mode %></div>
+        </div>
+
+        <div class="gothic-emblem-medallion">
+          <span class="material-symbols-outlined" style="font-size: 28px; color: <%= isWinner ? '#10b981' : (isDraw ? '#f59e0b' : '#ff3333') %>; filter: drop-shadow(0 0 6px <%= isWinner ? 'rgba(16,185,129,0.8)' : 'rgba(255,51,51,0.8)' %>);">
+            <%= isWinner ? 'military_tech' : (isDraw ? 'balance' : 'cancel') %>
+          </span>
+        </div>
+
+        <div class="font-monospace small text-end" style="color: var(--gothic-text-gold);">
+          TEMPO DE COMBATE: <strong class="text-main"><%= battle.duration_seconds %>s</strong>
+        </div>
+      </section>
+
+      <!-- 3. Estandarte Heraldico do Desfecho (Vitória / Derrota / Empate) -->
+      <section class="gothic-outcome-banner <%= isWinner ? 'victory' : (isDraw ? 'draw' : 'defeat') %>">
+        <!-- Ícone Central em Destaque -->
+        <% if (isWinner) { %>
+          <span class="material-symbols-outlined outcome-crest-symbol victory">workspace_premium</span>
+          <h2 class="outcome-banner-title victory">Vitória Tática</h2>
+          <p class="outcome-banner-sub">
+            Seu domínio de postura (Break System) e cadência de cartas aniquilaram as defesas do adversário.
+          </p>
+        <% } else if (isDraw) { %>
+          <span class="material-symbols-outlined outcome-crest-symbol draw">balance</span>
+          <h2 class="outcome-banner-title draw">Duelo Empatado</h2>
+          <p class="outcome-banner-sub">
+            O confronto encerrou sem determinação conclusiva de um vencedor soberano na arena.
+          </p>
+        <% } else { %>
+          <span class="material-symbols-outlined outcome-crest-symbol defeat">skull</span>
+          <h2 class="outcome-banner-title defeat">Derrota na Arena</h2>
+          <p class="outcome-banner-sub">
+            Sua postura defensiva foi rompida nesta rodada. Reestruture seu baralho e retorne ao combate.
+          </p>
+        <% } %>
+
+        <!-- Métricas Numéricas de Combate -->
+        <div class="outcome-metrics-strip">
+          <div class="outcome-metric-cell">
+            <span class="outcome-metric-val"><%= battle.total_turns %></span>
+            <span class="outcome-metric-lbl">Turnos Totais</span>
+          </div>
+          <div class="outcome-metric-cell">
+            <span class="outcome-metric-val"><%= battle.duration_seconds %>s</span>
+            <span class="outcome-metric-lbl">Duração do Duelo</span>
+          </div>
+          <div class="outcome-metric-cell">
+            <span class="outcome-metric-val" style="color: #ffffff;"><%= battle.winner_username || (isDraw ? 'Nenhum' : 'Autômato IA') %></span>
+            <span class="outcome-metric-lbl">Vencedor Oficial</span>
+          </div>
+        </div>
+
+        <!-- Botões de Ação Imediata -->
+        <div class="outcome-actions-cluster">
+          <a href="/battle" class="gothic-btn cta-primary">
+            <span class="material-symbols-outlined">swords</span> Jogar Novamente
+          </a>
+          <a href="/dashboard" class="gothic-btn secondary">
+            <span class="material-symbols-outlined">dashboard</span> Quartel-General
+          </a>
+          <a href="/history" class="gothic-btn secondary">
+            <span class="material-symbols-outlined">history</span> Histórico Geral
+          </a>
+        </div>
+      </section>
+
+      <!-- 4. Telemetria Passo a Passo das Ações por Rodada -->
+      <section class="gothic-telemetry-container">
+        <div class="gothic-telemetry-header">
+          <h3 class="gothic-telemetry-title">
+            <span class="material-symbols-outlined">receipt_long</span>
+            <span>Telemetria Passo a Passo de Ações</span>
+          </h3>
+          <span class="small font-monospace" style="color: var(--gothic-text-gold);">
+            TOTAL: <%= actions ? actions.length : 0 %> COMANDOS
+          </span>
+        </div>
+
+        <% if (actions && actions.length > 0) { %>
+          <div class="table-responsive">
+            <table class="gothic-telemetry-table">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">RODADA</th>
+                  <th>COMBATENTE</th>
+                  <th>MANOBRA / CARTA</th>
+                  <th class="text-center">DANO HP</th>
+                  <th class="text-center">RUPTURA BREAK</th>
+                  <th class="text-center">CRÍTICO</th>
+                  <th class="text-end">COMBO MULT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% actions.forEach(function(a) { %>
+                  <% const isMyAction = a.actor_user_id === currentUserId; %>
+                  <tr>
+                    <td style="color: var(--gothic-text-muted);">#<%= a.turn_number %></td>
+                    <td class="fw-bold <%= isMyAction ? 'text-success' : 'text-danger' %>">
+                      <%= a.actor_username || 'Sistema' %>
+                    </td>
+                    <td>
+                      <span class="badge" style="background: #250808; border: 1px solid var(--gothic-border-gold); color: var(--gothic-text-gold); font-family: 'Cinzel', serif; font-size: 0.65rem;">
+                        <%= a.action_type %>
+                      </span>
+                      <% if (a.card_name) { %>
+                        <span class="text-main fw-bold ms-1"><%= a.card_name %></span>
+                        <% if (a.card_element) { %>
+                          <img src="/images/icons/<%= a.card_element.toLowerCase() %>.png" alt="<%= a.card_element %>" class="gothic-table-icon ms-1" onerror="this.style.display='none'">
+                        <% } %>
+                      <% } %>
+                    </td>
+                    <td class="text-center font-monospace">
+                      <% if (a.damage_dealt > 0) { %>
+                        <span class="text-danger fw-bold">-<%= a.damage_dealt %></span>
+                      <% } else { %>
+                        <span style="color: var(--gothic-text-muted);">&mdash;</span>
+                      <% } %>
+                    </td>
+                    <td class="text-center font-monospace">
+                      <% if (a.break_dealt > 0) { %>
+                        <span class="text-warning fw-bold">-<%= a.break_dealt %></span>
+                      <% } else { %>
+                        <span style="color: var(--gothic-text-muted);">&mdash;</span>
+                      <% } %>
+                    </td>
+                    <td class="text-center">
+                      <% if (a.was_critical) { %>
+                        <span class="badge bg-danger font-monospace" style="font-size: 0.6rem;">CRÍTICO</span>
+                      <% } else { %>
+                        <span style="color: var(--gothic-text-muted);">&mdash;</span>
+                      <% } %>
+                    </td>
+                    <td class="text-end font-monospace text-warning fw-bold">
+                      x<%= Number(a.combo_multiplier).toFixed(2) %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="p-4 text-center text-muted font-monospace small">
+            Nenhuma telemetria detalhada registrada para esta partida.
+          </div>
+        <% } %>
+      </section>
+
+      <!-- 5. Barra Inferior com Orbe da Facção -->
+      <footer class="gothic-bottom-hotbar">
+        <div class="d-flex align-items-center gap-2">
+          <a href="/battle" class="gothic-tab-link" title="Arena">
+            <span class="material-symbols-outlined" style="font-size: 22px;">swords</span>
+          </a>
+          <a href="/decks" class="gothic-tab-link" title="Baralhos">
+            <span class="material-symbols-outlined" style="font-size: 22px;">backpack</span>
+          </a>
+        </div>
+
+        <!-- ORBE CENTRAL CONFORME O RESULTADO -->
+        <div class="gothic-orb-assembly">
+          <div class="gothic-orb-sphere <%= isWinner ? 'victory' : (isDraw ? 'draw' : 'defeat') %>" title="Desfecho: <%= isWinner ? 'Vitória' : 'Fim de Combate' %>">
+            <span class="material-symbols-outlined text-white" style="font-size: 32px; filter: drop-shadow(0 0 8px #ffffff);">
+              <%= isWinner ? 'workspace_premium' : (isDraw ? 'balance' : 'skull') %>
+            </span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="/history" class="gothic-tab-link" title="Histórico">
+            <span class="material-symbols-outlined" style="font-size: 22px;">history</span>
+          </a>
+          <a href="/dashboard" class="gothic-tab-link" title="Quartel-General">
+            <span class="material-symbols-outlined" style="font-size: 22px;">dashboard</span>
+          </a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Lógica JavaScript: Tema e Som Tático -->
+  <script>
+    function applyGothicTheme() {
+      const theme = localStorage.getItem('joker_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = theme === 'dark' ? 'DARK' : 'LIGHT';
+    }
+
+    function toggleGothicTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('joker_theme', next);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = next === 'dark' ? 'DARK' : 'LIGHT';
+
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+    }
+
+    applyGothicTheme();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.Joker && window.Joker.Audio) {
+        const isWin = <%= isWinner ? 'true' : 'false' %>;
+        if (isWin) {
+          window.Joker.Audio.playVictory();
+        } else {
+          window.Joker.Audio.playDefeat();
+        }
+      }
+    });
+  </script>
+
+  <!-- Rodapé Oficial -->
+  <%- include('../partials/footer') %>
+</body>
+</html>

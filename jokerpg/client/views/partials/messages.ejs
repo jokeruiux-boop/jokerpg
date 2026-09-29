@@ -1,0 +1,208 @@
+<!-- Google Fonts & Material Symbols para Alertas Góticos -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<% if (typeof successMessage !== 'undefined' && successMessage) { %>
+  <div class="gothic-alert gothic-alert-success joker-alert-dismissible" role="alert">
+    <!-- Cantoneiras Ornamentais -->
+    <span class="gothic-alert-corner top-left"></span>
+    <span class="gothic-alert-corner bottom-right"></span>
+
+    <div class="d-flex align-items-center gap-3">
+      <div class="gothic-alert-icon-box success">
+        <span class="material-symbols-outlined">workspace_premium</span>
+      </div>
+      <div>
+        <div class="gothic-alert-title success">Notificação de Êxito</div>
+        <div class="gothic-alert-text"><%= successMessage %></div>
+      </div>
+    </div>
+    
+    <button type="button" class="gothic-alert-close-btn" onclick="this.parentElement.remove()" aria-label="Fechar Notificação">
+      <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+    </button>
+  </div>
+<% } %>
+
+<% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+  <div class="gothic-alert gothic-alert-danger joker-alert-dismissible" role="alert">
+    <span class="gothic-alert-corner top-left"></span>
+    <span class="gothic-alert-corner bottom-right"></span>
+
+    <div class="d-flex align-items-center gap-3">
+      <div class="gothic-alert-icon-box danger">
+        <span class="material-symbols-outlined">warning</span>
+      </div>
+      <div>
+        <div class="gothic-alert-title danger">Atenção Tática</div>
+        <div class="gothic-alert-text"><%= errorMessage %></div>
+      </div>
+    </div>
+
+    <button type="button" class="gothic-alert-close-btn" onclick="this.parentElement.remove()" aria-label="Fechar Notificação">
+      <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+    </button>
+  </div>
+<% } %>
+
+<% if (typeof errors !== 'undefined' && Array.isArray(errors) && errors.length > 0) { %>
+  <div class="gothic-alert gothic-alert-danger joker-alert-dismissible" role="alert">
+    <span class="gothic-alert-corner top-left"></span>
+    <span class="gothic-alert-corner bottom-right"></span>
+
+    <div class="w-100">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <div class="d-flex align-items-center gap-2">
+          <div class="gothic-alert-icon-box danger" style="width: 26px; height: 26px;">
+            <span class="material-symbols-outlined" style="font-size: 16px;">shield_with_heart</span>
+          </div>
+          <span class="gothic-alert-title danger">Requisitos Pendentes de Validação</span>
+        </div>
+        <button type="button" class="gothic-alert-close-btn" onclick="this.parentElement.parentElement.parentElement.remove()" aria-label="Fechar Notificação">
+          <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+        </button>
+      </div>
+
+      <ul class="gothic-alert-list mb-0">
+        <% errors.forEach(function(err) { %>
+          <li><%= err %></li>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
+<% } %>
+
+<style>
+  /* ========================================================================
+     ESTILIZAÇÃO TOTAL AUTOCONTIDA: ALERTAS GÓTICOS DARK FANTASY (DIABLO HUD)
+     ======================================================================== */
+
+  .gothic-alert {
+    background: var(--gothic-panel, #0d0404);
+    border: 1.5px solid var(--gothic-border-gold, #b38b4d);
+    border-radius: 2px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    position: relative;
+    box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.9), 0 4px 16px rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    user-select: none;
+  }
+
+  .gothic-alert-corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--gothic-border-gold, #b38b4d);
+    pointer-events: none;
+  }
+
+  .gothic-alert-corner.top-left {
+    top: 2px;
+    left: 2px;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .gothic-alert-corner.bottom-right {
+    bottom: 2px;
+    right: 2px;
+    border-left: none;
+    border-top: none;
+  }
+
+  .gothic-alert-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 8px #000;
+  }
+
+  .gothic-alert-icon-box.success {
+    background: radial-gradient(circle, #0e4429 0%, #031c11 100%);
+    border: 1px solid #10b981;
+    color: #10b981;
+    filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.6));
+  }
+
+  .gothic-alert-icon-box.danger {
+    background: radial-gradient(circle, #4a0d0d 0%, #1a0303 100%);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.6));
+  }
+
+  .gothic-alert.gothic-alert-success {
+    border-left: 4px solid #10b981;
+  }
+
+  .gothic-alert.gothic-alert-danger {
+    border-left: 4px solid #ef4444;
+  }
+
+  .gothic-alert-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    font-size: 0.82rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .gothic-alert-title.success {
+    color: #10b981;
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  }
+
+  .gothic-alert-title.danger {
+    color: #ff5555;
+    text-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+  }
+
+  .gothic-alert-text {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.86rem;
+    color: var(--gothic-text, #eae0d5);
+    line-height: 1.35;
+  }
+
+  .gothic-alert-list {
+    padding-left: 20px;
+    color: var(--gothic-text, #eae0d5);
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+
+  .gothic-alert-list li {
+    margin-bottom: 2px;
+  }
+
+  .gothic-alert-close-btn {
+    background: #140505;
+    border: 1px solid var(--gothic-border-gold, #b38b4d);
+    color: var(--gothic-text-gold, #d4af37);
+    border-radius: 2px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .gothic-alert-close-btn:hover {
+    background: #3d0e0e;
+    border-color: #ff3333;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
+  }
+</style>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('../partials/head') %>
+  <style>
+    .admin-app-wrapper {
+      display: flex;
+      min-height: 100vh;
+      background-color: #07090e;
+      position: relative;
+    }
+
+    .admin-main-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow-x: hidden;
+    }
+
+    .admin-top-bar {
+      height: 60px;
+      background-color: #0c0f17;
+      border-bottom: 1px solid rgba(255, 183, 3, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1010;
+    }
+
+    .admin-content-body {
+      padding: 24px;
+      flex: 1 0 auto;
+    }
+
+    .admin-mobile-toggle {
+      background: transparent;
+      border: 1px solid rgba(255, 183, 3, 0.4);
+      color: var(--warning);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    @media (max-width: 768px) {
+      .admin-content-body {
+        padding: 16px 12px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-dark text-main">
+  <div class="admin-app-wrapper">
+    <!-- Barra Lateral Exclusiva do Administrador Supremo -->
+    <%- include('../partials/adminSidebar') %>
+
+    <!-- Estrutura Principal do Painel -->
+    <div class="admin-main-container">
+      <!-- Barra Superior de Controle Administrativo -->
+      <header class="admin-top-bar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn admin-mobile-toggle d-lg-none" type="button" id="adminSidebarToggle" onclick="document.getElementById('jokerAdminSidebar').classList.toggle('show')">
+            <i class="bi bi-list fs-4"></i>
+          </button>
+          <div class="d-flex align-items-center gap-2">
+            <span class="joker-badge" style="background: rgba(255, 183, 3, 0.15); color: #ffb703; border-color: #ffb703;">MODO SUPREMO</span>
+            <span class="text-muted d-none d-md-inline small font-monospace">CONSOLE DE COMANDO & AUDITORIA</span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+          <a href="/dashboard" class="btn-joker btn-joker-outline py-1 px-3 small">
+            <i class="bi bi-controller me-1"></i> Ir para o Jogo
+          </a>
+          <span class="d-none d-sm-inline font-monospace text-warning small">
+            <i class="bi bi-shield-lock-fill me-1"></i> <%= typeof currentUser !== 'undefined' && currentUser ? currentUser.username : 'ADMIN' %>
+          </span>
+        </div>
+      </header>
+
+      <!-- Área de Conteúdo Específico das Páginas de Administração -->
+      <main class="admin-content-body container-fluid">
+        <!-- Notificações e Alertas Globais -->
+        <%- include('../partials/messages') %>
+
+        <!-- Injeção do Conteúdo da View Administrativa -->
+        <%- body %>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5.3 Bundle JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

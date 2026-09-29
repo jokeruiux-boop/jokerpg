@@ -1,0 +1,410 @@
+<!-- Google Fonts: Plus Jakarta Sans & Cinzel -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Google Material Symbols Oficial (Sem Emojis) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<aside class="joker-gothic-sidebar d-flex flex-column flex-shrink-0" id="jokerSidebar">
+  <!-- Cantoneiras Metálicas Ornamentais -->
+  <span class="gothic-sidebar-corner top-left"></span>
+  <span class="gothic-sidebar-corner bottom-right"></span>
+
+  <!-- ========================================================================
+       CABEÇALHO DA SIDEBAR: PERFIL DO COMBATENTE EM FERRO E OURO
+       ======================================================================== -->
+  <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+    <div class="gothic-sidebar-header p-3 border-bottom border-danger border-opacity-25">
+      <div class="d-flex align-items-center gap-3">
+        <!-- Avatar com Moldura de Ouro Forjado -->
+        <div class="position-relative">
+          <img src="/images/avatar/<%= currentUser.id %>" alt="<%= currentUser.username %>" class="gothic-sidebar-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.png';">
+          <span class="gothic-status-beacon" title="Combatente Conectado"></span>
+        </div>
+        
+        <!-- Identidade e Estatísticas Rápidas -->
+        <div class="d-flex flex-column overflow-hidden">
+          <span class="gothic-sidebar-username text-truncate"><%= currentUser.username %></span>
+          <div class="d-flex align-items-center gap-2 mt-1">
+            <span class="gothic-sidebar-lvl">LVL <%= currentUser.level || 1 %></span>
+            <span class="gothic-sidebar-pwr"><%= currentUser.power_index || 0 %> PWR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- ========================================================================
+       LISTA DE NAVEGAÇÃO VERTICAL TÁTICA GÓTICA (DIABLO HUD)
+       ======================================================================== -->
+  <ul class="nav nav-pills flex-column mb-auto p-2 gap-1" id="gothicSidebarNavLinks">
+    <li class="nav-item">
+      <a href="/dashboard" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">dashboard</span>
+        <span>Quartel-General</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/battle" class="nav-link gothic-sidebar-link arena-special">
+        <span class="material-symbols-outlined nav-icon arena-icon">swords</span>
+        <span>Arena de Duelos</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/characters" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">sports_martial_arts</span>
+        <span>Galeria de Heróis</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/cards" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">style</span>
+        <span>Arsenal de Cartas</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/decks" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">layers</span>
+        <span>Meus Baralhos</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/missions" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">task_alt</span>
+        <span>Missões & Desafios</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/ranking" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">military_tech</span>
+        <span>Quadro de Honra</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/history" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">history</span>
+        <span>Histórico de Duelos</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/profile" class="nav-link gothic-sidebar-link">
+        <span class="material-symbols-outlined nav-icon">manage_accounts</span>
+        <span>Folha de Perfil</span>
+      </a>
+    </li>
+
+    <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+      <li class="nav-item mt-3 pt-3 border-top border-warning border-opacity-25">
+        <a href="/admin" class="nav-link gothic-sidebar-link admin-highlight">
+          <span class="material-symbols-outlined nav-icon text-warning">shield_person</span>
+          <span>Painel Admin Supremo</span>
+        </a>
+      </li>
+    <% } %>
+  </ul>
+
+  <!-- ========================================================================
+       RODAPÉ DA SIDEBAR: ENCERRAMENTO DE SESSÃO
+       ======================================================================== -->
+  <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+    <div class="p-3 border-top border-danger border-opacity-25 mt-auto">
+      <form action="/auth/logout" method="POST" class="m-0">
+        <button type="submit" class="gothic-logout-btn w-100">
+          <span class="material-symbols-outlined fs-5">power_settings_new</span>
+          <span>Desconectar</span>
+        </button>
+      </form>
+    </div>
+  <% } %>
+</aside>
+
+<style>
+  /* ========================================================================
+     ESTILIZAÇÃO TOTAL AUTOCONTIDA: SIDEBAR GÓTICA DARK FANTASY (DIABLO HUD)
+     ======================================================================== */
+
+  .joker-gothic-sidebar {
+    width: 270px;
+    background: 
+      radial-gradient(ellipse at 0% 50%, rgba(179, 139, 77, 0.1) 0%, transparent 80%),
+      linear-gradient(180deg, #120404 0%, #080202 50%, #150505 100%);
+    border-right: 2px solid #5a1414;
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.95), 2px 0 10px rgba(179, 139, 77, 0.2);
+    min-height: calc(100vh - 65px);
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 1020;
+    position: relative;
+    user-select: none;
+  }
+
+  .gothic-sidebar-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #b38b4d;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .gothic-sidebar-corner.top-left {
+    top: 2px;
+    left: 2px;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .gothic-sidebar-corner.bottom-right {
+    bottom: 2px;
+    right: 2px;
+    border-left: none;
+    border-top: none;
+  }
+
+  /* Cabeçalho do Perfil */
+  .gothic-sidebar-header {
+    background: linear-gradient(90deg, rgba(58, 14, 14, 0.4) 0%, transparent 100%);
+  }
+
+  .gothic-sidebar-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 2px solid #b38b4d;
+    box-shadow: 0 0 12px rgba(179, 139, 77, 0.45);
+    background-color: #1a0505;
+  }
+
+  .gothic-status-beacon {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    background-color: #10b981;
+    border: 2px solid #120404;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+  }
+
+  .gothic-sidebar-username {
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    font-size: 0.98rem;
+    letter-spacing: 1px;
+    color: #eae0d5;
+    text-shadow: 0 0 8px rgba(179, 139, 77, 0.35);
+    line-height: 1.1;
+  }
+
+  .gothic-sidebar-lvl {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    background: #250808;
+    border: 1px solid #b38b4d;
+    color: #ffaa00;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  .gothic-sidebar-pwr {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #00d2ff;
+    letter-spacing: 0.5px;
+  }
+
+  /* Links Verticais */
+  .gothic-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #8e7a6d !important;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    transition: all 0.18s ease;
+    position: relative;
+  }
+
+  .gothic-sidebar-link .nav-icon {
+    font-size: 22px;
+    color: #b38b4d;
+    transition: all 0.18s ease;
+  }
+
+  .gothic-sidebar-link:hover {
+    background: linear-gradient(90deg, rgba(179, 139, 77, 0.25) 0%, rgba(30, 6, 6, 0.6) 100%);
+    border-color: rgba(179, 139, 77, 0.6);
+    color: #d4af37 !important;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    transform: translateX(4px);
+  }
+
+  .gothic-sidebar-link:hover .nav-icon {
+    color: #ffcc00;
+    transform: scale(1.15);
+  }
+
+  /* Aba Dinamicamente Ativa (Idêntica à aba CARACTER da referência com brilho vermelho) */
+  .gothic-sidebar-link.active-tab {
+    background: linear-gradient(90deg, rgba(179, 139, 77, 0.35) 0%, rgba(45, 8, 4, 0.85) 100%);
+    border: 1px solid #b38b4d;
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8), 0 0 10px rgba(220, 38, 38, 0.45);
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(220, 38, 38, 0.8), 0 0 20px rgba(255, 30, 0, 0.9);
+  }
+
+  .gothic-sidebar-link.active-tab .nav-icon {
+    color: #ffaa00;
+    filter: drop-shadow(0 0 6px rgba(255, 170, 0, 0.7));
+  }
+
+  .gothic-sidebar-link.active-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #ff3b30 50%, transparent 100%);
+    box-shadow: 0 0 8px #ff3b30;
+  }
+
+  /* Destaque Especial da Arena de Duelos */
+  .gothic-sidebar-link.arena-special {
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+  }
+
+  .gothic-sidebar-link.arena-special .arena-icon {
+    color: #ff3333;
+  }
+
+  .gothic-sidebar-link.arena-special:hover {
+    background: rgba(220, 38, 38, 0.25);
+    border-color: #ff3333;
+    color: #fff !important;
+  }
+
+  /* Destaque do Admin */
+  .gothic-sidebar-link.admin-highlight {
+    background: rgba(255, 170, 0, 0.08);
+    border: 1px solid rgba(255, 170, 0, 0.3);
+    color: #ffcc00 !important;
+  }
+
+  .gothic-sidebar-link.admin-highlight:hover {
+    background: rgba(255, 170, 0, 0.2);
+    border-color: #ffcc00;
+  }
+
+  /* Botão de Desconexão */
+  .gothic-logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background: linear-gradient(180deg, #3d0709 0%, #1c0304 100%);
+    border: 1px solid #821013;
+    border-radius: 2px;
+    color: #fca5a5;
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    font-size: 0.82rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    transition: all 0.2s ease;
+  }
+
+  .gothic-logout-btn:hover {
+    background: linear-gradient(180deg, #6c0a0c 0%, #3a0507 100%);
+    border-color: #ff2a5f;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(255, 42, 95, 0.6);
+    transform: scale(1.02);
+  }
+
+  /* Suporte Responsivo Mobile */
+  @media (max-width: 991.98px) {
+    .joker-gothic-sidebar {
+      position: fixed;
+      top: 65px;
+      left: -280px;
+      bottom: 0;
+      width: 270px;
+      box-shadow: 6px 0 25px rgba(0, 0, 0, 0.95);
+    }
+
+    .joker-gothic-sidebar.show {
+      left: 0;
+    }
+  }
+</style>
+
+<!-- ========================================================================
+     MOTOR DE DETECÇÃO AUTOMÁTICA DA ABA ATIVA NA SIDEBAR
+     ======================================================================== -->
+<script>
+  (function () {
+    function highlightActiveSidebarTab() {
+      const currentPath = window.location.pathname.toLowerCase();
+      const sidebarLinks = document.querySelectorAll('#gothicSidebarNavLinks .gothic-sidebar-link');
+
+      sidebarLinks.forEach(function (link) {
+        const href = link.getAttribute('href');
+        if (!href) return;
+
+        const target = href.toLowerCase();
+        let isMatch = false;
+
+        if (target === '/dashboard') {
+          isMatch = (currentPath === '/dashboard' || currentPath === '/');
+        } else if (target === '/battle') {
+          isMatch = currentPath.startsWith('/battle');
+        } else if (target === '/characters') {
+          isMatch = currentPath.startsWith('/characters');
+        } else if (target === '/cards') {
+          isMatch = currentPath.startsWith('/cards');
+        } else if (target === '/decks') {
+          isMatch = currentPath.startsWith('/decks');
+        } else if (target === '/missions') {
+          isMatch = currentPath.startsWith('/missions');
+        } else if (target === '/ranking') {
+          isMatch = currentPath.startsWith('/ranking');
+        } else if (target === '/history') {
+          isMatch = currentPath.startsWith('/history');
+        } else if (target === '/profile') {
+          isMatch = currentPath.startsWith('/profile');
+        } else if (target === '/admin') {
+          isMatch = currentPath.startsWith('/admin');
+        }
+
+        if (isMatch) {
+          link.classList.add('active-tab');
+        } else {
+          link.classList.remove('active-tab');
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', highlightActiveSidebarTab);
+    } else {
+      highlightActiveSidebarTab();
+    }
+  })();
+</script>

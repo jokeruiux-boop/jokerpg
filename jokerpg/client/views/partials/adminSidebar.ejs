@@ -1,0 +1,312 @@
+<!-- Google Fonts: Plus Jakarta Sans & Cinzel -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Google Material Symbols Oficial (Sem Emojis) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<aside class="joker-gothic-admin-sidebar d-flex flex-column flex-shrink-0" id="jokerAdminSidebar">
+  <!-- ========================================================================
+       CABEÇALHO DA SIDEBAR: BRASÃO DO ADMINISTRADOR SUPREMO
+       ======================================================================== -->
+  <div class="gothic-admin-sidebar-header p-3 border-bottom border-warning border-opacity-25">
+    <div class="d-flex align-items-center gap-3">
+      <!-- Medalhão Heraldico Dourado -->
+      <div class="gothic-admin-crest">
+        <span class="material-symbols-outlined gothic-admin-crest-icon">shield_person</span>
+      </div>
+
+      <!-- Título de Autoridade Suprema -->
+      <div class="d-flex flex-column overflow-hidden">
+        <span class="gothic-admin-motto text-truncate">COMANDO SUPREMO</span>
+        <span class="gothic-admin-name text-truncate">
+          <%= typeof currentUser !== 'undefined' && currentUser ? currentUser.username : 'ADMIN' %>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       LISTA DE NAVEGAÇÃO ADMINISTRATIVA GÓTICA
+       ======================================================================== -->
+  <ul class="nav nav-pills flex-column mb-auto p-2 gap-1" id="gothicAdminNavLinks">
+    <li class="nav-item">
+      <a href="/admin" class="nav-link gothic-admin-link">
+        <span class="material-symbols-outlined nav-icon">dashboard</span>
+        <span>Painel & Métricas</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/admin/users" class="nav-link gothic-admin-link">
+        <span class="material-symbols-outlined nav-icon">group</span>
+        <span>Moderação de Jogadores</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/admin/characters" class="nav-link gothic-admin-link">
+        <span class="material-symbols-outlined nav-icon">sports_martial_arts</span>
+        <span>Gestão de Combatentes</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/admin/cards" class="nav-link gothic-admin-link">
+        <span class="material-symbols-outlined nav-icon">style</span>
+        <span>Catálogo de Cartas</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/admin/battles" class="nav-link gothic-admin-link">
+        <span class="material-symbols-outlined nav-icon">swords</span>
+        <span>Supervisão de Duelos</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/admin/missions" class="nav-link gothic-admin-link">
+        <span class="material-symbols-outlined nav-icon">task_alt</span>
+        <span>Gestão de Missões</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/admin/logs" class="nav-link gothic-admin-link">
+        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+        <span>Trilha de Auditoria</span>
+      </a>
+    </li>
+
+    <!-- Divisor e Retorno à Arena -->
+    <li class="nav-item mt-3 pt-3 border-top border-secondary border-opacity-25">
+      <a href="/dashboard" class="nav-link gothic-admin-link return-game-link">
+        <span class="material-symbols-outlined nav-icon" style="color: #00d2ff;">sports_esports</span>
+        <span>Retornar à Arena</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- ========================================================================
+       RODAPÉ DA SIDEBAR: ENCERRAMENTO DE SESSÃO
+       ======================================================================== -->
+  <div class="p-3 border-top border-danger border-opacity-25 mt-auto">
+    <form action="/auth/logout" method="POST" class="m-0">
+      <button type="submit" class="gothic-admin-logout-btn w-100">
+        <span class="material-symbols-outlined fs-5">power_settings_new</span>
+        <span>Encerrar Sessão</span>
+      </button>
+    </form>
+  </div>
+</aside>
+
+<style>
+  /* ========================================================================
+     ESTILIZAÇÃO TOTAL AUTOCONTIDA: ADMIN SIDEBAR GÓTICA DARK FANTASY
+     ======================================================================== */
+
+  .joker-gothic-admin-sidebar {
+    width: 270px;
+    background: 
+      radial-gradient(ellipse at 0% 50%, rgba(179, 139, 77, 0.12) 0%, transparent 80%),
+      linear-gradient(180deg, #120404 0%, #0a0202 50%, #150505 100%);
+    border-right: 2px solid #5a1818;
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.95), 2px 0 10px rgba(179, 139, 77, 0.25);
+    min-height: 100vh;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 1020;
+    user-select: none;
+  }
+
+  /* Cabeçalho do Administrador Supremo */
+  .gothic-admin-sidebar-header {
+    background: linear-gradient(90deg, rgba(58, 14, 14, 0.4) 0%, transparent 100%);
+  }
+
+  .gothic-admin-crest {
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    background: radial-gradient(circle, #2e0909 0%, #0d0202 100%);
+    border: 2px solid #b38b4d;
+    box-shadow: 0 0 12px rgba(179, 139, 77, 0.45), inset 0 0 8px #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .gothic-admin-crest-icon {
+    color: #ffaa00;
+    font-size: 26px;
+    filter: drop-shadow(0 0 6px rgba(255, 170, 0, 0.7));
+  }
+
+  .gothic-admin-motto {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #b38b4d;
+    text-transform: uppercase;
+  }
+
+  .gothic-admin-name {
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    color: #eae0d5;
+    line-height: 1.1;
+  }
+
+  /* Links Verticais */
+  .gothic-admin-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #8e7a6d !important;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition: all 0.18s ease;
+  }
+
+  .gothic-admin-link .nav-icon {
+    font-size: 22px;
+    color: #b38b4d;
+    transition: all 0.18s ease;
+  }
+
+  .gothic-admin-link:hover {
+    background: linear-gradient(90deg, rgba(179, 139, 77, 0.25) 0%, rgba(30, 6, 6, 0.6) 100%);
+    border-color: rgba(179, 139, 77, 0.6);
+    color: #d4af37 !important;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    transform: translateX(4px);
+  }
+
+  .gothic-admin-link:hover .nav-icon {
+    color: #ffcc00;
+    transform: scale(1.15);
+  }
+
+  /* Aba Dinamicamente Ativa */
+  .gothic-admin-link.active-tab {
+    background: linear-gradient(90deg, rgba(179, 139, 77, 0.4) 0%, rgba(45, 8, 4, 0.85) 100%);
+    border: 1px solid #b38b4d;
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8), 0 0 12px rgba(179, 139, 77, 0.35);
+    color: #ffdd44 !important;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+  }
+
+  .gothic-admin-link.active-tab .nav-icon {
+    color: #ffcc00;
+    filter: drop-shadow(0 0 6px #ffaa00);
+  }
+
+  .return-game-link {
+    color: #00d2ff !important;
+  }
+
+  .return-game-link:hover {
+    border-color: #00d2ff;
+    color: #38bdf8 !important;
+  }
+
+  /* Botão de Encerramento de Sessão */
+  .gothic-admin-logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background: linear-gradient(180deg, #3d0709 0%, #1c0304 100%);
+    border: 1px solid #821013;
+    border-radius: 3px;
+    color: #fca5a5;
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    font-size: 0.82rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    transition: all 0.2s ease;
+  }
+
+  .gothic-admin-logout-btn:hover {
+    background: linear-gradient(180deg, #6c0a0c 0%, #3a0507 100%);
+    border-color: #ff2a5f;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(255, 42, 95, 0.6);
+    transform: scale(1.02);
+  }
+
+  /* Suporte Responsivo Mobile */
+  @media (max-width: 991.98px) {
+    .joker-gothic-admin-sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      bottom: 0;
+      width: 270px;
+      box-shadow: 6px 0 30px rgba(0, 0, 0, 0.95);
+    }
+
+    .joker-gothic-admin-sidebar.show {
+      left: 0;
+    }
+  }
+</style>
+
+<!-- ========================================================================
+     MOTOR DE DETECÇÃO AUTOMÁTICA DA ABA ATIVA NO ADMIN
+     ======================================================================== -->
+<script>
+  (function () {
+    function highlightActiveAdminTab() {
+      const currentPath = window.location.pathname.toLowerCase();
+      const adminLinks = document.querySelectorAll('#gothicAdminNavLinks .gothic-admin-link');
+
+      adminLinks.forEach(function (link) {
+        const href = link.getAttribute('href');
+        if (!href) return;
+
+        const target = href.toLowerCase();
+        let isMatch = false;
+
+        if (target === '/admin') {
+          // Console ativo em /admin ou /admin/
+          isMatch = (currentPath === '/admin' || currentPath === '/admin/');
+        } else if (target === '/admin/users') {
+          isMatch = currentPath.startsWith('/admin/users');
+        } else if (target === '/admin/characters') {
+          isMatch = currentPath.startsWith('/admin/characters');
+        } else if (target === '/admin/cards') {
+          isMatch = currentPath.startsWith('/admin/cards');
+        } else if (target === '/admin/battles') {
+          isMatch = currentPath.startsWith('/admin/battles');
+        } else if (target === '/admin/missions') {
+          isMatch = currentPath.startsWith('/admin/missions');
+        } else if (target === '/admin/logs') {
+          isMatch = currentPath.startsWith('/admin/logs');
+        }
+
+        if (isMatch) {
+          link.classList.add('active-tab');
+        } else {
+          link.classList.remove('active-tab');
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', highlightActiveAdminTab);
+    } else {
+      highlightActiveAdminTab();
+    }
+  })();
+</script>

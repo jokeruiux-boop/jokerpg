@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('../partials/head') %>
+  <style>
+    .joker-app-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: var(--bg-core);
+    }
+
+    .joker-main-layout {
+      display: flex;
+      flex: 1 0 auto;
+      width: 100%;
+      position: relative;
+    }
+
+    .joker-content-area {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 24px 20px;
+    }
+
+    @media (max-width: 768px) {
+      .joker-content-area {
+        padding: 16px 12px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-core text-main">
+  <div class="joker-app-wrapper">
+    <!-- Barra Superior de Navegação -->
+    <%- include('../partials/navbar') %>
+
+    <!-- Estrutura Principal com Conteúdo -->
+    <div class="joker-main-layout">
+      <!-- Área Central Dinâmica -->
+      <main class="joker-content-area container-fluid px-3 px-lg-4">
+        <!-- Notificações e Alertas Globais -->
+        <%- include('../partials/messages') %>
+
+        <!-- Injeção do Conteúdo Específico da View -->
+        <%- body %>
+      </main>
+    </div>
+
+    <!-- Rodapé Oficial -->
+    <%- include('../partials/footer') %>
+  </div>
+</body>
+</html>

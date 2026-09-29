@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <%- include('../partials/head') %>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Outfit & Cinzel (Tipografia Gótica / Dark Fantasy) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Google Material Symbols Oficial (Sem Emojis) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Biblioteca SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* ==========================================================================
+       JOKER RPG — QUADRO DE HONRA DARK FANTASY (DESIGN CHAPADO DIABLO / MMO)
+       Molduras em Ferro Forjado, Pódio em Tábuas de Pedra e Cantoneiras de Ouro
+       ========================================================================== */
+
+    :root[data-theme="dark"] {
+      --gothic-bg: #090404;
+      --gothic-frame-bg: #140707;
+      --gothic-panel: #0d0404;
+      --gothic-panel-card: linear-gradient(180deg, #180808 0%, #0d0303 100%);
+      --gothic-border-outer: #381010;
+      --gothic-border-gold: #b38b4d;
+      --gothic-border-gold-glow: rgba(179, 139, 77, 0.45);
+      --gothic-filigree: #8a6530;
+      --gothic-text: #eae0d5;
+      --gothic-text-gold: #d4af37;
+      --gothic-text-muted: #8e7a6d;
+      --gothic-red-glow: rgba(220, 38, 38, 0.7);
+      --gothic-slot-bg: #190505;
+      --gothic-slot-border: #4a1515;
+      --gothic-hotbar-bg: #100505;
+    }
+
+    :root[data-theme="light"] {
+      --gothic-bg: #ece6dc;
+      --gothic-frame-bg: #dcd3c3;
+      --gothic-panel: #f4eee2;
+      --gothic-panel-card: linear-gradient(180deg, #ffffff 0%, #f1e9dc 100%);
+      --gothic-border-outer: #8a6e55;
+      --gothic-border-gold: #966f2d;
+      --gothic-border-gold-glow: rgba(150, 111, 45, 0.3);
+      --gothic-filigree: #78531e;
+      --gothic-text: #261c14;
+      --gothic-text-gold: #825a17;
+      --gothic-text-muted: #6e5a4c;
+      --gothic-red-glow: rgba(185, 28, 28, 0.4);
+      --gothic-slot-bg: #e2d7c5;
+      --gothic-slot-border: #9c846e;
+      --gothic-hotbar-bg: #cfc2ad;
+    }
+
+    body {
+      background: var(--gothic-bg) !important;
+      color: var(--gothic-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      user-select: none;
+    }
+
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .gothic-ranking-wrapper {
+      max-width: 1400px;
+      margin: 20px auto 50px auto;
+      padding: 0 16px;
+    }
+
+    /* Moldura Principal de Pedra de Ferro */
+    .gothic-main-frame {
+      background: var(--gothic-frame-bg);
+      border: 4px solid var(--gothic-border-outer);
+      border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(0, 0, 0, 0.8);
+      position: relative;
+      padding: 8px;
+    }
+
+    /* Cantoneiras Metálicas Ornamentais */
+    .gothic-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid var(--gothic-border-gold);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .gothic-corner.top-left { top: 2px; left: 2px; border-right: none; border-bottom: none; }
+    .gothic-corner.top-right { top: 2px; right: 2px; border-left: none; border-bottom: none; }
+    .gothic-corner.bottom-left { bottom: 2px; left: 2px; border-right: none; border-top: none; }
+    .gothic-corner.bottom-right { bottom: 2px; right: 2px; border-left: none; border-top: none; }
+
+    /* Barra Superior de Abas */
+    .gothic-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #2d0b0b;
+      background: #090202;
+      padding: 6px 16px;
+    }
+
+    .gothic-tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .gothic-tab-link {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #634f47;
+      text-decoration: none;
+      padding: 6px 12px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .gothic-tab-link:hover {
+      color: #b58d60;
+    }
+
+    .gothic-tab-link.active {
+      color: #ffffff;
+      text-shadow: 0 0 10px var(--gothic-red-glow), 0 0 20px rgba(255, 30, 0, 0.8);
+    }
+
+    .gothic-tab-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #ff3b30 50%, transparent 100%);
+      box-shadow: 0 0 8px #ff3b30;
+    }
+
+    .gothic-theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--gothic-filigree);
+      color: var(--gothic-text-gold);
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-theme-toggle-btn:hover {
+      box-shadow: 0 0 8px var(--gothic-border-gold-glow);
+    }
+
+    /* Cabeçalho de Status / Quadro de Honra */
+    .gothic-ranking-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 2px solid #2d0b0b;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .gothic-header-title-box {
+      text-align: left;
+    }
+
+    .gothic-header-main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--gothic-text);
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .gothic-header-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      color: var(--gothic-text-gold);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .gothic-emblem-medallion {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2e0909 0%, #0d0202 100%);
+      border: 2px solid #5a1818;
+      box-shadow: inset 0 0 10px #000, 0 0 15px rgba(220, 38, 38, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gothic-stats-summary {
+      font-family: 'Cinzel', serif;
+      text-align: right;
+    }
+
+    .gothic-stats-numbers {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    /* Faixa de Destaque da Posição do Próprio Usuário */
+    .gothic-my-rank-strip {
+      background: var(--gothic-panel);
+      border: 1px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.85);
+      padding: 14px 20px;
+      margin: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .rank-my-pos-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #ffaa00;
+      text-shadow: 0 0 10px rgba(255, 170, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ==========================================================================
+       PÓDIO GÓTICO TOP 3 (TÁBUAS DE PEDRA E FERRO COM O CAMPEÃO AO CENTRO)
+       ========================================================================== */
+    .gothic-podium-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr 1fr;
+      align-items: end;
+      gap: 14px;
+      padding: 0 14px 14px 14px;
+    }
+
+    .gothic-podium-card {
+      background: var(--gothic-panel-card);
+      border: 2px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.9), 0 8px 24px rgba(0, 0, 0, 0.7);
+      border-radius: 2px;
+      padding: 22px 18px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .gothic-podium-card:hover {
+      transform: translateY(-4px);
+      border-color: #ffaa00;
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.8), 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 16px var(--gothic-border-gold-glow);
+    }
+
+    /* Card 1: Campeão Dourado Central */
+    .gothic-podium-card.rank-1 {
+      border: 2.5px solid #d4af37;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9), 0 0 25px rgba(212, 175, 55, 0.4);
+      padding-top: 30px;
+      padding-bottom: 28px;
+      transform: translateY(-6px);
+      z-index: 3;
+    }
+
+    .gothic-podium-card.rank-2 {
+      border: 2px solid #00d2ff;
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.9), 0 0 18px rgba(0, 210, 255, 0.3);
+      z-index: 2;
+    }
+
+    .gothic-podium-card.rank-3 {
+      border: 2px solid #a855f7;
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.9), 0 0 18px rgba(168, 85, 247, 0.3);
+      z-index: 1;
+    }
+
+    .podium-crown-insignia {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffcc00;
+      font-size: 28px;
+      filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.8));
+    }
+
+    .podium-rank-tag {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+
+    .rank-1 .podium-rank-tag { background: #d4af37; color: #000; }
+    .rank-2 .podium-rank-tag { background: #00d2ff; color: #000; }
+    .rank-3 .podium-rank-tag { background: #a855f7; color: #fff; }
+
+    .podium-avatar-circle {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gothic-border-gold);
+      margin: 8px auto 10px auto;
+      background: #000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .rank-1 .podium-avatar-circle {
+      width: 86px;
+      height: 86px;
+      border: 3px solid #ffcc00;
+      box-shadow: 0 0 16px rgba(255, 204, 0, 0.6);
+    }
+
+    .podium-player-name {
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 1px;
+      color: var(--gothic-text);
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .podium-score-gold {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #ffcc00;
+      letter-spacing: 1px;
+      text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
+    }
+
+    /* Painel de Filtros e Ordenação */
+    .gothic-sort-filter-strip {
+      background: var(--gothic-panel);
+      border: 1px solid var(--gothic-border-gold);
+      padding: 12px 18px;
+      margin: 0 14px 14px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.85);
+    }
+
+    .gothic-sort-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .gothic-sort-btn {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.76rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 2px;
+      border: 1px solid var(--gothic-slot-border);
+      background: var(--gothic-slot-bg);
+      color: var(--gothic-text-muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-sort-btn:hover {
+      border-color: var(--gothic-border-gold);
+      color: var(--gothic-text-gold);
+    }
+
+    .gothic-sort-btn.active {
+      background: linear-gradient(180deg, #3d1414 0%, #170505 100%);
+      border-color: var(--gothic-border-gold);
+      color: #ffcc00;
+      box-shadow: 0 0 10px rgba(179, 139, 77, 0.35);
+    }
+
+    .gothic-search-input {
+      background: var(--gothic-slot-bg);
+      border: 1px solid var(--gothic-slot-border);
+      color: var(--gothic-text);
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      padding: 6px 12px;
+      border-radius: 2px;
+      outline: none;
+      width: 220px;
+    }
+
+    .gothic-search-input:focus {
+      border-color: var(--gothic-border-gold);
+      box-shadow: 0 0 8px var(--gothic-border-gold-glow);
+    }
+
+    /* Tabela Gótica Chapada de Classificação */
+    .gothic-table-container {
+      background: var(--gothic-panel);
+      border: 2px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.9);
+      margin: 0 14px 14px 14px;
+      overflow: hidden;
+    }
+
+    .gothic-leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+      color: var(--gothic-text);
+    }
+
+    .gothic-leaderboard-table th {
+      background: #110404;
+      color: var(--gothic-text-gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 14px 18px;
+      border-bottom: 2px solid var(--gothic-border-gold);
+    }
+
+    .gothic-leaderboard-table td {
+      padding: 12px 18px;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(179, 139, 77, 0.2);
+      font-family: 'Cinzel', serif;
+      font-size: 0.88rem;
+      transition: background 0.15s ease;
+    }
+
+    .gothic-leaderboard-table tr:hover td {
+      background: rgba(179, 139, 77, 0.1);
+    }
+
+    .gothic-leaderboard-table tr.current-user-row td {
+      background: rgba(220, 38, 38, 0.15);
+      border-top: 1px solid #ff3333;
+      border-bottom: 1px solid #ff3333;
+    }
+
+    .rank-medallion-cell {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 0.95rem;
+      width: 40px;
+    }
+
+    .rank-medallion-cell.top-1 { color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.8); }
+    .rank-medallion-cell.top-2 { color: #00d2ff; text-shadow: 0 0 8px rgba(0, 210, 255, 0.8); }
+    .rank-medallion-cell.top-3 { color: #a855f7; text-shadow: 0 0 8px rgba(168, 85, 247, 0.8); }
+
+    .table-player-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--gothic-border-gold);
+    }
+
+    .table-elem-icon {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+    }
+
+    /* Paginação Gótica */
+    .gothic-pagination-bar {
+      padding: 16px 20px;
+      border-top: 2px solid #2d0b0b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gothic-page-link {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gothic-text-gold);
+      border: 1px solid var(--gothic-border-gold);
+      background: var(--gothic-slot-bg);
+      padding: 5px 12px;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-page-link:hover {
+      background: #4a1515;
+      color: #ffffff;
+    }
+
+    /* Barra Inferior com Orbe da Facção */
+    .gothic-bottom-hotbar {
+      background: var(--gothic-hotbar-bg);
+      border-top: 2px solid #3d0c0c;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .gothic-orb-assembly {
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 25;
+    }
+
+    .gothic-orb-sphere {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ff7700 0%, #cc1100 50%, #440000 100%);
+      box-shadow: 0 0 25px rgba(255, 60, 0, 0.85), inset 0 -6px 14px rgba(0, 0, 0, 0.8);
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .gothic-orb-sphere:hover {
+      transform: scale(1.08);
+    }
+
+    @media (max-width: 991px) {
+      .gothic-podium-grid {
+        grid-template-columns: 1fr;
+      }
+      .gothic-podium-card.rank-1 {
+        order: -1;
+        transform: none;
+      }
+      .gothic-ranking-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .gothic-nav-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .gothic-orb-assembly {
+        position: static;
+        transform: none;
+        margin: 10px auto;
+      }
+      .gothic-bottom-hotbar {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra Superior de Navegação -->
+  <%- include('../partials/navbar') %>
+
+  <!-- ========================================================================
+       JANELA GÓTICA CHAPADA DO RANKING (DIABLO / CLASSIC RPG SHELL)
+       ======================================================================== -->
+  <main class="gothic-ranking-wrapper">
+    <!-- Alertas Globais -->
+    <%- include('../partials/messages') %>
+
+    <div class="gothic-main-frame">
+      <!-- Cantoneiras Ornamentais de Ferro e Ouro -->
+      <span class="gothic-corner top-left"></span>
+      <span class="gothic-corner top-right"></span>
+      <span class="gothic-corner bottom-left"></span>
+      <span class="gothic-corner bottom-right"></span>
+
+      <!-- 1. Abas Superiores Idênticas à Referência -->
+      <header class="gothic-nav-bar">
+        <div class="gothic-tabs-group">
+          <a href="/ranking" class="gothic-tab-link active">LEADERBOARD</a>
+          <a href="/battle" class="gothic-tab-link">ARENA</a>
+          <a href="/characters" class="gothic-tab-link">HEROES</a>
+          <a href="/cards" class="gothic-tab-link">CARDS</a>
+          <a href="/dashboard" class="gothic-tab-link">COMMAND (QG)</a>
+        </div>
+
+        <button type="button" class="gothic-theme-toggle-btn" onclick="toggleGothicTheme()" title="Alternar Modo Claro e Escuro">
+          <span class="material-symbols-outlined" style="font-size: 16px;">contrast</span>
+          <span id="themeText">DARK</span>
+        </button>
+      </header>
+
+      <!-- 2. Cabeçalho de Status: Título, Medalhão Central e Temporada -->
+      <section class="gothic-ranking-header">
+        <div class="gothic-header-title-box">
+          <h1 class="gothic-header-main-title">Quadro de Honra &bull; Leaderboard</h1>
+          <div class="gothic-header-sub">Classificação Oficial &bull; Resolução Autoritativa ELO</div>
+        </div>
+
+        <div class="gothic-emblem-medallion">
+          <span class="material-symbols-outlined" style="font-size: 28px; color: #ff3333; filter: drop-shadow(0 0 6px rgba(255,51,51,0.8));">military_tech</span>
+        </div>
+
+        <div class="gothic-stats-summary">
+          <div class="gothic-stats-numbers text-warning">
+            <%= currentSeason ? currentSeason.name : 'TEMPORADA GLOBAL' %>
+          </div>
+          <div class="small font-monospace" style="color: var(--gothic-text-gold); font-size: 0.68rem;">DISPUTA COMPETITIVA ATIVA</div>
+        </div>
+      </section>
+
+      <!-- 3. Faixa de Destaque do Próprio Jogador Conectado -->
+      <% if (userRank) { %>
+        <section class="gothic-my-rank-strip">
+          <div class="d-flex align-items-center gap-3">
+            <span class="rank-my-pos-badge">
+              <span class="material-symbols-outlined">workspace_premium</span>
+              #<%= userRank.rank_position %>
+            </span>
+            <div>
+              <div class="small font-monospace fw-bold text-uppercase" style="color: var(--gothic-text-gold);">Sua Posição Oficial</div>
+              <div class="small text-muted font-monospace"><%= userRank.wins %> Vitórias &bull; <%= userRank.losses %> Derrotas</div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-4 font-monospace">
+            <div>
+              <span class="text-dim small d-block">RATING OFICIAL</span>
+              <span class="h5 fw-bold text-warning mb-0"><%= userRank.rating %> ELO</span>
+            </div>
+            <div>
+              <span class="text-dim small d-block">PODER PONDERADO</span>
+              <span class="h5 fw-bold text-primary mb-0"><%= userRank.power_index %> PWR</span>
+            </div>
+          </div>
+        </section>
+      <% } %>
+
+      <!-- 4. Pódio Top 3 (Os 3 Melhores em Tábuas Góticas com o Campeão ao Centro) -->
+      <% 
+        const top1 = leaderboard && leaderboard.length > 0 ? leaderboard[0] : null;
+        const top2 = leaderboard && leaderboard.length > 1 ? leaderboard[1] : null;
+        const top3 = leaderboard && leaderboard.length > 2 ? leaderboard[2] : null;
+      %>
+
+      <% if (top1) { %>
+        <section class="gothic-podium-grid">
+          <!-- 2º Lugar (Esquerda - Ciano Metálico) -->
+          <% if (top2) { %>
+            <div class="gothic-podium-card rank-2" onclick="inspectGothicPlayer('<%= top2.user_id %>', '<%= top2.username %>')">
+              <span class="podium-rank-tag">2</span>
+              <img src="/images/avatar/<%= top2.user_id %>" alt="<%= top2.username %>" class="podium-avatar-circle" onerror="this.src='/images/default-avatar.png'">
+              <h3 class="podium-player-name"><%= top2.username %></h3>
+              <div class="podium-score-gold" style="color: #00d2ff;"><%= top2.rating %> ELO</div>
+              <div class="small text-muted font-monospace mt-1"><%= top2.power_index %> PWR &bull; <%= top2.wins %>V</div>
+            </div>
+          <% } %>
+
+          <!-- 1º Lugar (Centro - Mais Alto, Dourado com Coroa) -->
+          <div class="gothic-podium-card rank-1" onclick="inspectGothicPlayer('<%= top1.user_id %>', '<%= top1.username %>')">
+            <span class="material-symbols-outlined podium-crown-insignia">workspace_premium</span>
+            <span class="podium-rank-tag">1</span>
+            <img src="/images/avatar/<%= top1.user_id %>" alt="<%= top1.username %>" class="podium-avatar-circle" onerror="this.src='/images/default-avatar.png'">
+            <h3 class="podium-player-name" style="font-size: 1.35rem;"><%= top1.username %></h3>
+            <div class="podium-score-gold" style="font-size: 1.25rem;"><%= top1.rating %> ELO</div>
+            <div class="small text-muted font-monospace mt-1"><%= top1.power_index %> PWR &bull; <%= top1.wins %>V / <%= top1.losses %>D</div>
+          </div>
+
+          <!-- 3º Lugar (Direita - Púrpura) -->
+          <% if (top3) { %>
+            <div class="gothic-podium-card rank-3" onclick="inspectGothicPlayer('<%= top3.user_id %>', '<%= top3.username %>')">
+              <span class="podium-rank-tag">3</span>
+              <img src="/images/avatar/<%= top3.user_id %>" alt="<%= top3.username %>" class="podium-avatar-circle" onerror="this.src='/images/default-avatar.png'">
+              <h3 class="podium-player-name"><%= top3.username %></h3>
+              <div class="podium-score-gold" style="color: #c084fc;"><%= top3.rating %> ELO</div>
+              <div class="small text-muted font-monospace mt-1"><%= top3.power_index %> PWR &bull; <%= top3.wins %>V</div>
+            </div>
+          <% } %>
+        </section>
+      <% } %>
+
+      <!-- 5. Filtros de Ordenação e Seletor de Temporadas -->
+      <section class="gothic-sort-filter-strip">
+        <div class="gothic-sort-group">
+          <a href="/ranking?sortBy=rating<%= currentSeasonId ? `&seasonId=${currentSeasonId}` : '' %>" class="gothic-sort-btn <%= currentSort === 'rating' ? 'active' : '' %>">
+            <span class="material-symbols-outlined" style="font-size: 16px;">shield</span> ELO
+          </a>
+          <a href="/ranking?sortBy=power<%= currentSeasonId ? `&seasonId=${currentSeasonId}` : '' %>" class="gothic-sort-btn <%= currentSort === 'power' ? 'active' : '' %>">
+            <span class="material-symbols-outlined" style="font-size: 16px;">bolt</span> PODER
+          </a>
+          <a href="/ranking?sortBy=wins<%= currentSeasonId ? `&seasonId=${currentSeasonId}` : '' %>" class="gothic-sort-btn <%= currentSort === 'wins' ? 'active' : '' %>">
+            <span class="material-symbols-outlined" style="font-size: 16px;">trophy</span> VITÓRIAS
+          </a>
+          <a href="/ranking?sortBy=level<%= currentSeasonId ? `&seasonId=${currentSeasonId}` : '' %>" class="gothic-sort-btn <%= currentSort === 'level' ? 'active' : '' %>">
+            <span class="material-symbols-outlined" style="font-size: 16px;">person</span> NÍVEL
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <!-- Campo de Busca em Tempo Real -->
+          <input 
+            type="text" 
+            class="gothic-search-input" 
+            id="tableSearchInput" 
+            placeholder="BUSCAR DUELISTA..." 
+            onkeyup="filterGothicTable()"
+          >
+
+          <!-- Seletor de Temporada -->
+          <select class="gothic-search-input" style="width: auto; cursor: pointer;" onchange="window.location.href='/ranking?sortBy=<%= currentSort %>&seasonId=' + this.value">
+            <option value="" <%= !currentSeasonId ? 'selected' : '' %>>Todas as Temporadas</option>
+            <% if (allSeasons && allSeasons.length > 0) { %>
+              <% allSeasons.forEach(function(s) { %>
+                <option value="<%= s.id %>" <%= currentSeasonId === s.id ? 'selected' : '' %>><%= s.name %></option>
+              <% }); %>
+            <% } %>
+          </select>
+        </div>
+      </section>
+
+      <!-- 6. Tabela Oficial de Classificação Gótica -->
+      <section class="gothic-table-container">
+        <% if (leaderboard && leaderboard.length > 0) { %>
+          <div class="table-responsive">
+            <table class="gothic-leaderboard-table" id="leaderboardTable">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">RANK</th>
+                  <th>COMBATENTE</th>
+                  <th>HERÓI EQUIPADO</th>
+                  <th class="text-center">NÍVEL</th>
+                  <th class="text-center">PODER</th>
+                  <th class="text-center">CARTEL (V/D)</th>
+                  <th class="text-center">WIN RATE</th>
+                  <th class="text-end">RATING ELO</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% leaderboard.forEach(function(entry) { %>
+                  <% 
+                    const isMe = entry.user_id === currentUserId;
+                    const pos = parseInt(entry.rank_position, 10);
+                    const totalMatches = (entry.wins || 0) + (entry.losses || 0);
+                    const winRateCalc = totalMatches > 0 ? Math.round((entry.wins / totalMatches) * 100) : 0;
+                  %>
+                  <tr class="<%= isMe ? 'current-user-row' : '' %>">
+                    <td>
+                      <span class="rank-medallion-cell <%= pos === 1 ? 'top-1' : (pos === 2 ? 'top-2' : (pos === 3 ? 'top-3' : '')) %>">
+                        #<%= pos %>
+                      </span>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center gap-2">
+                        <img src="/images/avatar/<%= entry.user_id %>" alt="<%= entry.username %>" class="table-player-thumb" onerror="this.src='/images/default-avatar.png'">
+                        <span class="fw-bold <%= isMe ? 'text-primary' : 'text-main' %>"><%= entry.username %></span>
+                        <% if (isMe) { %>
+                          <span class="badge" style="background: #10b981; color: #000; font-size: 0.6rem;">VOCÊ</span>
+                        <% } %>
+                      </div>
+                    </td>
+                    <td>
+                      <% if (entry.main_character_name) { %>
+                        <div class="d-flex align-items-center gap-2">
+                          <img src="/images/icons/<%= (entry.main_character_element || 'fire').toLowerCase() %>.png" alt="<%= entry.main_character_element %>" class="table-elem-icon" onerror="this.style.display='none'">
+                          <span style="color: var(--gothic-text-muted);"><%= entry.main_character_name %></span>
+                        </div>
+                      <% } else { %>
+                        <span class="text-dim">&mdash;</span>
+                      <% } %>
+                    </td>
+                    <td class="text-center font-monospace" style="color: var(--gothic-text-gold);">
+                      LV <%= entry.level %>
+                    </td>
+                    <td class="text-center font-monospace fw-bold text-primary">
+                      <%= entry.power_index %>
+                    </td>
+                    <td class="text-center font-monospace">
+                      <span class="text-success"><%= entry.wins %>V</span>
+                      <span class="text-dim">/</span>
+                      <span class="text-danger"><%= entry.losses %>D</span>
+                    </td>
+                    <td class="text-center font-monospace">
+                      <span class="<%= winRateCalc >= 60 ? 'text-success' : (winRateCalc >= 40 ? 'text-warning' : 'text-muted') %> fw-bold">
+                        <%= winRateCalc %>%
+                      </span>
+                    </td>
+                    <td class="text-end font-monospace fw-bold text-warning fs-6">
+                      <%= entry.rating %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginação -->
+          <% if (pagination.totalPages > 1) { %>
+            <div class="gothic-pagination-bar">
+              <% if (pagination.currentPage > 1) { %>
+                <a class="gothic-page-link" href="/ranking?page=<%= pagination.currentPage - 1 %>&sortBy=<%= currentSort %>&seasonId=<%= currentSeasonId %>">&laquo; ANTERIOR</a>
+              <% } %>
+
+              <span class="small font-monospace" style="color: var(--gothic-text-muted);">
+                PÁGINA <%= pagination.currentPage %> DE <%= pagination.totalPages %>
+              </span>
+
+              <% if (pagination.currentPage < pagination.totalPages) { %>
+                <a class="gothic-page-link" href="/ranking?page=<%= pagination.currentPage + 1 %>&sortBy=<%= currentSort %>&seasonId=<%= currentSeasonId %>">PRÓXIMA &raquo;</a>
+              <% } %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="p-5 text-center text-muted font-monospace small">
+            <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.3; margin-bottom: 12px;">military_tech</span>
+            <p class="mb-0">Nenhum combatente registrado nesta classificação.</p>
+          </div>
+        <% } %>
+      </section>
+
+      <!-- 7. Barra Inferior com Orbe da Facção -->
+      <footer class="gothic-bottom-hotbar">
+        <div class="d-flex align-items-center gap-2">
+          <a href="/battle" class="gothic-tab-link" title="Arena">
+            <span class="material-symbols-outlined" style="font-size: 22px;">swords</span>
+          </a>
+          <a href="/decks" class="gothic-tab-link" title="Baralhos">
+            <span class="material-symbols-outlined" style="font-size: 22px;">backpack</span>
+          </a>
+          <a href="/characters" class="gothic-tab-link" title="Heróis">
+            <span class="material-symbols-outlined" style="font-size: 22px;">sports_martial_arts</span>
+          </a>
+        </div>
+
+        <!-- ORBE CENTRAL -->
+        <div class="gothic-orb-assembly">
+          <div class="gothic-orb-sphere" title="Classificação Oficial">
+            <span class="material-symbols-outlined text-white" style="font-size: 32px; filter: drop-shadow(0 0 8px #ffffff);">military_tech</span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="/missions" class="gothic-tab-link" title="Missões">
+            <span class="material-symbols-outlined" style="font-size: 22px;">task_alt</span>
+          </a>
+          <a href="/history" class="gothic-tab-link" title="Histórico">
+            <span class="material-symbols-outlined" style="font-size: 22px;">history</span>
+          </a>
+          <a href="/dashboard" class="gothic-tab-link" title="Quartel-General">
+            <span class="material-symbols-outlined" style="font-size: 22px;">dashboard</span>
+          </a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Lógica JavaScript: Tema, Busca e Inspeção -->
+  <script>
+    function applyGothicTheme() {
+      const theme = localStorage.getItem('joker_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = theme === 'dark' ? 'DARK' : 'LIGHT';
+    }
+
+    function toggleGothicTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('joker_theme', next);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = next === 'dark' ? 'DARK' : 'LIGHT';
+
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+    }
+
+    applyGothicTheme();
+
+    // Filtro Instantâneo de Busca
+    function filterGothicTable() {
+      const input = document.getElementById('tableSearchInput');
+      const filter = input.value.toLowerCase().trim();
+      const table = document.getElementById('leaderboardTable');
+      if (!table) return;
+
+      const rows = table.getElementsByTagName('tr');
+
+      for (let i = 1; i < rows.length; i++) {
+        const playerCol = rows[i].getElementsByTagName('td')[1];
+        if (playerCol) {
+          const txtValue = playerCol.textContent || playerCol.innerText;
+          if (txtValue.toLowerCase().indexOf(filter) > -1) {
+            rows[i].style.display = '';
+          } else {
+            rows[i].style.display = 'none';
+          }
+        }
+      }
+    }
+
+    // Modal de Inspeção de Duelista
+    function inspectGothicPlayer(userId, username) {
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playCardSelect();
+      }
+
+      Swal.fire({
+        title: `<span style="font-family: 'Cinzel', serif; letter-spacing: 2px;">Duelista: ${username}</span>`,
+        html: `
+          <div style="text-align: center; padding: 8px;">
+            <img src="/images/avatar/${userId}" onerror="this.src='/images/default-avatar.png'" style="width: 70px; height: 70px; border-radius: 50%; border: 2px solid #b38b4d; margin-bottom: 10px; object-fit: cover;">
+            <p style="font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; color: #eae0d5; margin: 0;">
+              Combatente ativo disputando a liderança no Quadro de Honra da temporada.
+            </p>
+          </div>
+        `,
+        confirmButtonText: 'Dispensar',
+        confirmButtonColor: '#781c2f',
+        background: '#140707',
+        color: '#eae0d5'
+      });
+    }
+  </script>
+
+  <!-- Rodapé Oficial -->
+  <%- include('../partials/footer') %>
+</body>
+</html>

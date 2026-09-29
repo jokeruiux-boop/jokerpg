@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <%- include('../partials/head') %>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Outfit & Cinzel (Tipografia Gótica / Dark Fantasy) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Google Material Symbols Oficial (Sem Emojis) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Biblioteca SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* ==========================================================================
+       JOKER RPG — HISTÓRICO DE CONFRONTOS DARK FANTASY (DESIGN CHAPADO DIABLO / MMO)
+       Molduras em Ferro Forjado, Tábuas de Telemetria e Cantoneiras de Ouro
+       ========================================================================== */
+
+    :root[data-theme="dark"] {
+      --gothic-bg: #090404;
+      --gothic-frame-bg: #140707;
+      --gothic-panel: #0d0404;
+      --gothic-panel-card: linear-gradient(180deg, #180808 0%, #0d0303 100%);
+      --gothic-border-outer: #381010;
+      --gothic-border-gold: #b38b4d;
+      --gothic-border-gold-glow: rgba(179, 139, 77, 0.45);
+      --gothic-filigree: #8a6530;
+      --gothic-text: #eae0d5;
+      --gothic-text-gold: #d4af37;
+      --gothic-text-muted: #8e7a6d;
+      --gothic-red-glow: rgba(220, 38, 38, 0.7);
+      --gothic-slot-bg: #190505;
+      --gothic-slot-border: #4a1515;
+      --gothic-hotbar-bg: #100505;
+    }
+
+    :root[data-theme="light"] {
+      --gothic-bg: #ece6dc;
+      --gothic-frame-bg: #dcd3c3;
+      --gothic-panel: #f4eee2;
+      --gothic-panel-card: linear-gradient(180deg, #ffffff 0%, #f1e9dc 100%);
+      --gothic-border-outer: #8a6e55;
+      --gothic-border-gold: #966f2d;
+      --gothic-border-gold-glow: rgba(150, 111, 45, 0.3);
+      --gothic-filigree: #78531e;
+      --gothic-text: #261c14;
+      --gothic-text-gold: #825a17;
+      --gothic-text-muted: #6e5a4c;
+      --gothic-red-glow: rgba(185, 28, 28, 0.4);
+      --gothic-slot-bg: #e2d7c5;
+      --gothic-slot-border: #9c846e;
+      --gothic-hotbar-bg: #cfc2ad;
+    }
+
+    body {
+      background: var(--gothic-bg) !important;
+      color: var(--gothic-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      user-select: none;
+    }
+
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .gothic-history-wrapper {
+      max-width: 1400px;
+      margin: 20px auto 50px auto;
+      padding: 0 16px;
+    }
+
+    /* Moldura Principal de Pedra de Ferro */
+    .gothic-main-frame {
+      background: var(--gothic-frame-bg);
+      border: 4px solid var(--gothic-border-outer);
+      border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(0, 0, 0, 0.8);
+      position: relative;
+      padding: 8px;
+    }
+
+    /* Cantoneiras Metálicas Ornamentais */
+    .gothic-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid var(--gothic-border-gold);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .gothic-corner.top-left { top: 2px; left: 2px; border-right: none; border-bottom: none; }
+    .gothic-corner.top-right { top: 2px; right: 2px; border-left: none; border-bottom: none; }
+    .gothic-corner.bottom-left { bottom: 2px; left: 2px; border-right: none; border-top: none; }
+    .gothic-corner.bottom-right { bottom: 2px; right: 2px; border-left: none; border-top: none; }
+
+    /* Barra Superior de Abas */
+    .gothic-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #2d0b0b;
+      background: #090202;
+      padding: 6px 16px;
+    }
+
+    .gothic-tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .gothic-tab-link {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #634f47;
+      text-decoration: none;
+      padding: 6px 12px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .gothic-tab-link:hover {
+      color: #b58d60;
+    }
+
+    .gothic-tab-link.active {
+      color: #ffffff;
+      text-shadow: 0 0 10px var(--gothic-red-glow), 0 0 20px rgba(255, 30, 0, 0.8);
+    }
+
+    .gothic-tab-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #ff3b30 50%, transparent 100%);
+      box-shadow: 0 0 8px #ff3b30;
+    }
+
+    .gothic-theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--gothic-filigree);
+      color: var(--gothic-text-gold);
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-theme-toggle-btn:hover {
+      box-shadow: 0 0 8px var(--gothic-border-gold-glow);
+    }
+
+    /* Cabeçalho de Status / Arquivo de Batalhas */
+    .gothic-history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 2px solid #2d0b0b;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .gothic-header-title-box {
+      text-align: left;
+    }
+
+    .gothic-header-main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--gothic-text);
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .gothic-header-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      color: var(--gothic-text-gold);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .gothic-emblem-medallion {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2e0909 0%, #0d0202 100%);
+      border: 2px solid #5a1818;
+      box-shadow: inset 0 0 10px #000, 0 0 15px rgba(220, 38, 38, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gothic-stats-summary {
+      font-family: 'Cinzel', serif;
+      text-align: right;
+    }
+
+    .gothic-stats-numbers {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    /* Faixa de Estatísticas de Cartel do Jogador */
+    .gothic-combat-record-strip {
+      background: var(--gothic-panel);
+      border: 1px solid var(--gothic-border-gold);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.85);
+      padding: 14px 20px;
+      margin: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .record-stat-box {
+      text-align: center;
+      font-family: 'Cinzel', serif;
+    }
+
+    .record-stat-val {
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .record-stat-lbl {
+      font-size: 0.68rem;
+      color: var(--gothic-text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Lista de Confrontos Registrados */
+    .gothic-battles-list-container {
+      padding: 0 14px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Tábua Individual de Batalha (Gothic Battle Row) */
+    .gothic-battle-record-tile {
+      background: var(--gothic-panel-card);
+      border: 1.5px solid var(--gothic-slot-border);
+      border-radius: 2px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      transition: all 0.15s ease;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .gothic-battle-record-tile:hover {
+      border-color: var(--gothic-border-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
+    }
+
+    .gothic-battle-record-tile.win {
+      border-left: 4px solid #10b981;
+    }
+
+    .gothic-battle-record-tile.loss {
+      border-left: 4px solid #ef4444;
+    }
+
+    .battle-outcome-tag {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 0.88rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 120px;
+    }
+
+    .battle-outcome-tag.win {
+      color: #10b981;
+      text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
+    .battle-outcome-tag.loss {
+      color: #ef4444;
+      text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+    }
+
+    .battle-match-details {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .battle-opponent-name {
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--gothic-text);
+      letter-spacing: 1px;
+      margin: 0 0 4px 0;
+    }
+
+    .battle-match-meta {
+      font-size: 0.76rem;
+      color: var(--gothic-text-muted);
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .battle-mode-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      background: #190505;
+      border: 1px solid var(--gothic-border-gold);
+      color: var(--gothic-text-gold);
+    }
+
+    .battle-metrics-cluster {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: 'Cinzel', serif;
+      text-align: center;
+    }
+
+    .battle-metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .battle-metric-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffaa00;
+      line-height: 1.1;
+    }
+
+    .battle-metric-lbl {
+      font-size: 0.62rem;
+      color: var(--gothic-text-dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .gothic-btn-telemetry {
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 2px;
+      border: 1px solid var(--gothic-border-gold);
+      background: linear-gradient(180deg, #3d1414 0%, #170505 100%);
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      transition: all 0.15s ease;
+    }
+
+    .gothic-btn-telemetry:hover {
+      background: linear-gradient(180deg, #6c1c1c 0%, #2e0909 100%);
+      border-color: #ffaa00;
+      color: #ffdd44;
+      transform: scale(1.03);
+    }
+
+    /* Paginação Gótica */
+    .gothic-pagination-bar {
+      padding: 16px 20px;
+      border-top: 2px solid #2d0b0b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gothic-page-link {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gothic-text-gold);
+      border: 1px solid var(--gothic-border-gold);
+      background: var(--gothic-slot-bg);
+      padding: 5px 12px;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .gothic-page-link:hover {
+      background: #4a1515;
+      color: #ffffff;
+    }
+
+    /* Barra Inferior com Orbe da Facção */
+    .gothic-bottom-hotbar {
+      background: var(--gothic-hotbar-bg);
+      border-top: 2px solid #3d0c0c;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .gothic-orb-assembly {
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 25;
+    }
+
+    .gothic-orb-sphere {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ff7700 0%, #cc1100 50%, #440000 100%);
+      box-shadow: 0 0 25px rgba(255, 60, 0, 0.85), inset 0 -6px 14px rgba(0, 0, 0, 0.8);
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .gothic-orb-sphere:hover {
+      transform: scale(1.08);
+    }
+
+    @media (max-width: 768px) {
+      .gothic-battle-record-tile {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .gothic-history-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .gothic-nav-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .battle-metrics-cluster {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .gothic-orb-assembly {
+        position: static;
+        transform: none;
+        margin: 10px auto;
+      }
+      .gothic-bottom-hotbar {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra de Navegação Superior Integrada -->
+  <%- include('../partials/navbar') %>
+
+  <!-- ========================================================================
+       JANELA GÓTICA CHAPADA DE HISTÓRICO (DIABLO / CLASSIC RPG SHELL)
+       ======================================================================== -->
+  <main class="gothic-history-wrapper">
+    <!-- Alertas Globais -->
+    <%- include('../partials/messages') %>
+
+    <div class="gothic-main-frame">
+      <!-- Cantoneiras Ornamentais de Ferro e Ouro -->
+      <span class="gothic-corner top-left"></span>
+      <span class="gothic-corner top-right"></span>
+      <span class="gothic-corner bottom-left"></span>
+      <span class="gothic-corner bottom-right"></span>
+
+      <!-- 1. Abas Superiores Idênticas à Referência -->
+      <header class="gothic-nav-bar">
+        <div class="gothic-tabs-group">
+          <a href="/history" class="gothic-tab-link active">HISTORY (CONFRONTOS)</a>
+          <a href="/battle" class="gothic-tab-link">ARENA</a>
+          <a href="/ranking" class="gothic-tab-link">RANKING</a>
+          <a href="/characters" class="gothic-tab-link">HEROES</a>
+          <a href="/dashboard" class="gothic-tab-link">COMMAND (QG)</a>
+        </div>
+
+        <button type="button" class="gothic-theme-toggle-btn" onclick="toggleGothicTheme()" title="Alternar Modo Claro e Escuro">
+          <span class="material-symbols-outlined" style="font-size: 16px;">contrast</span>
+          <span id="themeText">DARK</span>
+        </button>
+      </header>
+
+      <!-- 2. Cabeçalho de Status: Título, Medalhão Central e Estatísticas de Confrontos -->
+      <section class="gothic-history-header">
+        <div class="gothic-header-title-box">
+          <h1 class="gothic-header-main-title">Arquivo de Guerra &bull; Histórico</h1>
+          <div class="gothic-header-sub">Registro de Disputas &bull; Telemetria Autoritativa de Combate</div>
+        </div>
+
+        <div class="gothic-emblem-medallion">
+          <span class="material-symbols-outlined" style="font-size: 28px; color: #ff3333; filter: drop-shadow(0 0 6px rgba(255,51,51,0.8));">history</span>
+        </div>
+
+        <div class="gothic-stats-summary">
+          <div class="gothic-stats-numbers">
+            <span class="text-success"><%= stats.wins %>V</span>
+            <span style="color: var(--gothic-text-muted);">/</span>
+            <span class="text-danger"><%= stats.losses %>D</span>
+          </div>
+          <div class="small font-monospace" style="color: var(--gothic-text-gold); font-size: 0.68rem;">CARTEL DE COMBATE</div>
+        </div>
+      </section>
+
+      <!-- 3. Faixa de Estatísticas de Cartel do Combatente -->
+      <section class="gothic-combat-record-strip">
+        <div class="record-stat-box">
+          <div class="record-stat-val text-main"><%= stats.total %></div>
+          <div class="record-stat-lbl">DUELOS TOTAIS</div>
+        </div>
+
+        <div class="record-stat-box">
+          <div class="record-stat-val text-success"><%= stats.wins %></div>
+          <div class="record-stat-lbl">VITÓRIAS</div>
+        </div>
+
+        <div class="record-stat-box">
+          <div class="record-stat-val text-danger"><%= stats.losses %></div>
+          <div class="record-stat-lbl">DERROTAS</div>
+        </div>
+
+        <div class="record-stat-box">
+          <div class="record-stat-val text-warning">
+            <%= stats.total > 0 ? Math.round((stats.wins / stats.total) * 100) : 0 %>%
+          </div>
+          <div class="record-stat-lbl">TAXA DE VITÓRIA</div>
+        </div>
+      </section>
+
+      <!-- 4. Lista de Batalhas Registradas em Tábuas Góticas -->
+      <section class="gothic-battles-list-container">
+        <% if (battles && battles.length > 0) { %>
+          <% battles.forEach(function(b) { %>
+            <% const isWin = b.winner_id === currentUserId; %>
+            <% const opponentName = isWin ? (b.loser_username || 'Autômato IA') : (b.winner_username || 'Autômato IA'); %>
+
+            <article class="gothic-battle-record-tile <%= isWin ? 'win' : 'loss' %>">
+              <!-- Desfecho Tático com Ícone Oficial -->
+              <div class="battle-outcome-tag <%= isWin ? 'win' : 'loss' %>">
+                <span class="material-symbols-outlined" style="font-size: 20px;">
+                  <%= isWin ? 'military_tech' : 'cancel' %>
+                </span>
+                <span><%= isWin ? 'Vitória' : 'Derrota' %></span>
+              </div>
+
+              <!-- Detalhes do Confronto e Oponente -->
+              <div class="battle-match-details">
+                <h3 class="battle-opponent-name">vs <%= opponentName %></h3>
+                <div class="battle-match-meta">
+                  <span class="battle-mode-badge"><%= b.mode %></span>
+                  <span>Herói: <strong class="text-main"><%= b.character_used || 'Titular' %></strong></span>
+                  <span class="text-dim">&bull;</span>
+                  <span><%= new Date(b.created_at).toLocaleDateString('pt-BR') %> às <%= new Date(b.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %></span>
+                </div>
+              </div>
+
+              <!-- Métricas Numéricas de Combate -->
+              <div class="battle-metrics-cluster">
+                <div class="battle-metric-item">
+                  <span class="battle-metric-val"><%= b.total_turns %></span>
+                  <span class="battle-metric-lbl">TURNOS</span>
+                </div>
+                <div class="battle-metric-item">
+                  <span class="battle-metric-val"><%= b.duration_seconds %>s</span>
+                  <span class="battle-metric-lbl">DURAÇÃO</span>
+                </div>
+              </div>
+
+              <!-- Botão para Inspecionar Telemetria do Confronto -->
+              <div>
+                <a href="/battle/result/<%= b.id %>" class="gothic-btn-telemetry">
+                  <span class="material-symbols-outlined" style="font-size: 16px;">receipt_long</span> Telemetria
+                </a>
+              </div>
+            </article>
+          <% }); %>
+
+          <!-- 5. Paginação Gótica -->
+          <% if (pagination.totalPages > 1) { %>
+            <div class="gothic-pagination-bar mt-2">
+              <% if (pagination.currentPage > 1) { %>
+                <a class="gothic-page-link" href="/history?page=<%= pagination.currentPage - 1 %>">&laquo; ANTERIOR</a>
+              <% } %>
+
+              <span class="small font-monospace" style="color: var(--gothic-text-muted);">
+                PÁGINA <%= pagination.currentPage %> DE <%= pagination.totalPages %>
+              </span>
+
+              <% if (pagination.currentPage < pagination.totalPages) { %>
+                <a class="gothic-page-link" href="/history?page=<%= pagination.currentPage + 1 %>">PRÓXIMA &raquo;</a>
+              <% } %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="p-5 text-center text-muted font-monospace small">
+            <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.3; margin-bottom: 12px;">history_toggle_off</span>
+            <p class="mb-0">Nenhum duelo registrado no arquivo de combate.</p>
+          </div>
+        <% } %>
+      </section>
+
+      <!-- 6. Barra Inferior com Orbe da Facção -->
+      <footer class="gothic-bottom-hotbar">
+        <div class="d-flex align-items-center gap-2">
+          <a href="/battle" class="gothic-tab-link" title="Arena">
+            <span class="material-symbols-outlined" style="font-size: 22px;">swords</span>
+          </a>
+          <a href="/decks" class="gothic-tab-link" title="Baralhos">
+            <span class="material-symbols-outlined" style="font-size: 22px;">backpack</span>
+          </a>
+          <a href="/characters" class="gothic-tab-link" title="Heróis">
+            <span class="material-symbols-outlined" style="font-size: 22px;">sports_martial_arts</span>
+          </a>
+        </div>
+
+        <!-- ORBE CENTRAL -->
+        <div class="gothic-orb-assembly">
+          <div class="gothic-orb-sphere" title="Arquivo de Duelos">
+            <span class="material-symbols-outlined text-white" style="font-size: 32px; filter: drop-shadow(0 0 8px #ffffff);">history</span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="/ranking" class="gothic-tab-link" title="Classificação">
+            <span class="material-symbols-outlined" style="font-size: 22px;">military_tech</span>
+          </a>
+          <a href="/missions" class="gothic-tab-link" title="Missões">
+            <span class="material-symbols-outlined" style="font-size: 22px;">task_alt</span>
+          </a>
+          <a href="/dashboard" class="gothic-tab-link" title="Quartel-General">
+            <span class="material-symbols-outlined" style="font-size: 22px;">dashboard</span>
+          </a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Lógica JavaScript: Tema e Efeitos Sonoros -->
+  <script>
+    function applyGothicTheme() {
+      const theme = localStorage.getItem('joker_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = theme === 'dark' ? 'DARK' : 'LIGHT';
+    }
+
+    function toggleGothicTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('joker_theme', next);
+      const txt = document.getElementById('themeText');
+      if (txt) txt.textContent = next === 'dark' ? 'DARK' : 'LIGHT';
+
+      if (window.Joker && window.Joker.Audio) {
+        window.Joker.Audio.playUiClick();
+      }
+    }
+
+    applyGothicTheme();
+  </script>
+
+  <!-- Rodapé Oficial -->
+  <%- include('../partials/footer') %>
+</body>
+</html>
